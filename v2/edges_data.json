@@ -1,0 +1,13 @@
+{
+	"edges":[ 
+		{ "source": "北门" , "target": "仙云石", "dist":8 },
+	 	{ "source": "北门" , "target": "狮子山", "dist":9 },
+    { "source": "狮子山" , "target": "飞流瀑", "dist":6}, 
+    { "source": "狮子山" , "target": "一线天", "dist":7},
+    { "source": "一线天" , "target": "观云台", "dist":11}, 
+    { "source": "飞流瀑" , "target": "观云台", "dist":3},
+   	{ "source": "仙云石" , "target": "九曲桥", "dist":5}, 
+   	{ "source": "仙云石" , "target": "仙武湖", "dist":4}, 
+   	{ "source": "仙武湖" , "target": "九曲桥", "dist":7}
+   ]
+}

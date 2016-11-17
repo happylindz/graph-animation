@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="utf-8">  
+      <title>图论</title>  
+      <link rel="stylesheet" href="main.css">
+      <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+</head> 
+<script src="data.js"></script>
+<body>  
+
+	<div id="nav">
+		<ul>
+       <li>
+       	<div class="form-group">
+			    <label for="dfsbegin">DFS 深度遍历:</label>
+			    <input type="text" class="form-control" id="dfsbegin" placeholder="请输入起点">
+			  </div>
+			  <div class="form-group">
+			  	<input type="button" class="btn btn-primary" value="DFS深度遍历" id="dfsbtn">
+			  </div>
+       </li>
+       <li></li>
+       <li></li>
+    </ul>
+	</div>
+	<script src="bootbox.min.js"></script>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>  
+      <script>		   
+				   		
+	var width = 600;
+	var height = 600;
+	
+	
+	var svg = d3.select("body")
+				.append("svg")
+				.attr("width",width)
+				.attr("height",height);
+	
+	var force = d3.layout.force()
+			.nodes(nodes)		//指定节点数组
+			.links(edges)		//指定连线数组
+			.size([width,height])	//指定范围
+			.linkDistance(function(data){
+				return data.dist * 25;
+			})	//指定连线长度
+			.charge(-1500);	//相互之间的作用力
+
+	force.start();	//开始作用
+
+	console.log(nodes);
+	console.log(edges);
+	
+	//添加连线		
+	var svg_edges = svg.selectAll("line")
+						.data(force.links())
+						.enter()
+						.append("path")
+						.attr("id", function(d, i){
+							return "edgepath" + i;
+						})
+						.attr("class", "edgepath")
+						.style({
+							"stroke": "#B43232",
+							"stroke-width": 0.5
+						});
+
+	var color = d3.scale.category20();
+			
+	//添加节点			
+	var svg_nodes = svg.append("g").selectAll("circle")
+						.data(force.nodes())
+						.enter()
+						.append("circle")
+						.attr("r",function(data){
+							return data.popularity * 4;
+						})
+						.attr("id", function(d){
+							return d.id;
+						})
+						.style("fill",function(d,i){
+							return "#F6E8E9";
+						})
+						.style("stroke", "#A254A2")
+						.on("click", function(node){
+							svg_edges.style("stroke-width", function(line){
+								console.log(line);
+								if(line.source.name == node.name || line.target.name==node.name){
+									return 3;
+								}else{
+									return 0.5;
+								}
+							})
+						})
+						.call(force.drag);	//使得节点能够拖动
+	// console.log(svg_nodes)
+
+	// // //添加描述节点的文字
+	var svg_texts = svg.append("g").selectAll("text")
+						.data(force.nodes())
+						.enter()
+						.append("text")
+						.attr({
+							"dy": ".35em",
+							"text-anchor": "middle"
+						}).style({
+							"fill": "#A254A2"
+						}).text(function(d){
+							// return d.name;
+						}).attr("x", function(d){
+							d3.select(this).append("tspan")
+							.attr("x", 0).attr('y', 0)
+							.text(function(){
+								return d.name;
+							})
+						})
+	var svg_edges_texts = svg.append("g").selectAll(".edgelabel")
+														.data(force.links())
+														.enter()
+														.append('text')
+														.style("fill", "black")
+														.style("pointer-events", "none")
+														.attr({
+															"class": "edgelabel",
+															"id": function(d, i){
+																return "edgepath" + i;
+															},
+															"dx": function(d, i){
+																return d.dist * 26 / 2;
+															},
+															"dy": 0
+														});
+	svg_edges_texts.append("textPath")
+									.attr("xlink:href", function(d, i){
+										return "#edgepath" + i;
+									})
+									.style("pointer-events", "none")
+									.text(function(d){
+										return d.dist + "00m";
+									})
+				
+
+	force.on("tick", function(){	//对于每一个时间间隔
+	
+		 //更新连线坐标
+		 svg_edges.attr('d', function(d) { 
+    var path='M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
+    return path;
+});  
+		 
+		 //更新节点坐标
+		 // svg_nodes.attr("cx",function(d){ return d.x; })
+		 		// .attr("cy",function(d){ return d.y; });
+		 svg_nodes.attr("transform", transform);
+
+		 //更新文字坐标
+		 // svg_texts.attr("x", function(d){ return d.x; })
+		 	// .attr("y", function(d){ return d.y; });
+		 	svg_texts.attr("transform", transform);
+		 	// svg_edges_texts.attr("x", function(d){ return d.x; })
+		 	// .attr("y", function(d){ return d.y; });
+		 	svg_edges_texts.attr('transform',function(d,i){
+        if (d.target.x<d.source.x){
+            bbox = this.getBBox();
+            rx = bbox.x+bbox.width/2;
+            ry = bbox.y+bbox.height/2;
+            return 'rotate(180 '+rx+' '+ry+')';
+        }
+        else {
+            return 'rotate(0)';
+        }
+	   	});
+
+
+	});		  
+	function transform(d){
+		return "translate(" + (d.x) + "," + (d.y) + ")";
+	}
+      </script>  
+	<script src="ALGraph.js"></script>
+	<script src="main.js"></script>
+  </body>  
+</html>  
