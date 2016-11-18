@@ -7,7 +7,7 @@
 				dataType: 'json'
 			})
 			.done(function(res) {
-				resolve(res.nodes);
+				resolve(res.data.nodes);
 			})
 			.fail(function(error) {
 				reject(error);
@@ -23,7 +23,7 @@
 				dataType: 'json'
 			})
 			.done(function(res) {
-				resolve(res.edges);
+				resolve(res.data.edges);
 			})
 			.fail(function(error) {
 				reject(error);
@@ -38,8 +38,5 @@
 		window.graph = graph;
 		graph.drawing();
 
-	}).catch(function (error) {
-		console.log(error);
 	});
-
 })();

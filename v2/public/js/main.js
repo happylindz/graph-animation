@@ -1,3 +1,5 @@
+function
+
 $(document.body).on("click", ".traversal", function(){
 	let beginNode = $('#begin').val();
 	let data = JSON.stringify({
@@ -52,6 +54,7 @@ $(document.body).on("click", ".traversal", function(){
 				for(let i = 1, len = res.length; i < len; i++){
 					message += " --> " + res[i];
 				}
+
 				let box = bootbox.alert({
 					size: "large",
 					title: "导游路线图查询结果:",
@@ -63,13 +66,13 @@ $(document.body).on("click", ".traversal", function(){
 						}
 					},
 					callback: function(){
-						console.log("finally nodes");
-						graph.nodes.forEach(function(data){
+						graph.nodes_data.forEach(function(data){
 							data.isVisited = false;
 						});
 						graph.svg_nodes.style("fill", "#F6E8E9");
 					}
 				});	
+
 				box.css({
 					'top': '50%',
 					'margin-top': function () {
@@ -109,15 +112,101 @@ $(document.body).on("click", ".traversal", function(){
 
 
 $(document.body).on("click", "#add_node_btn", function () {
-	let name = $("#add_node").val();
-	let popularity = $("#popularity").val();
-	let desc = $("#desc").val();
-	graph.insertNode(name, desc, popularity);
+	let name = $("#node_name").val();
+	let desc = $("#node_desc").val();
+	let popularity = $('#node_popularity').val();
+	let data = {
+		method: "add",
+		data: {
+			name: name,
+			desc: desc,
+			popularity: popularity
+		}
+	};
+	$.ajax({
+		url: '/node',
+		type: 'post',
+		data: JSON.stringify(data),
+		dataType: 'json',
+		contentType: "application/json"
+	})
+	.done(function(res) {
+		let callback = null;
+		if(res.code == 0){
+			callback = function(){
+				graph.insertNode(name, desc, popularity);
+			}
+		};
+		let box = bootbox.alert({
+				size: "small",
+				title: "结果:",
+				message: res.message,
+				buttons:{
+					ok:{
+						label: "确认",
+						className: "btn-primary"
+					}
+				},
+				callback: callback
+		});	
+		box.css({
+			'top': '50%',
+			'margin-top': function () {
+			  return -(box.height() / 2);
+			}
+		});
+	})
+	.fail(function(err) {
+		console.log("error" + err);
+	});		
 });
 
 $(document.body).on("click", "#add_edge", function(){
 	let begin = $('#edge_begin').val();
 	let end = $('#edge_end').val();
 	let dist = $("#edge_dist").val();
-	graph.insertEdge(begin, end, dist);
+	let data = {
+		method: "add",
+		data: {
+			begin: begin,
+			end: end,
+			dist: dist
+		}
+	};
+	$.ajax({
+		url: '/edge',
+		type: 'post',
+		data: JSON.stringify(data),
+		dataType: 'json',
+		contentType: "application/json"
+	})
+	.done(function(res) {
+		let callback = null;
+		if(res.code == 0){
+			callback = function(){
+				graph.insertEdge(begin, end, dist);
+			}
+		};
+		let box = bootbox.alert({
+				size: "small",
+				title: "结果:",
+				message: res.message,
+				buttons:{
+					ok:{
+						label: "确认",
+						className: "btn-primary"
+					}
+				},
+				callback: callback
+		});	
+		box.css({
+			'top': '50%',
+			'margin-top': function () {
+			  return -(box.height() / 2);
+			}
+		});
+	})
+	.fail(function(err) {
+		console.log("error" + err);
+	});		
 });
