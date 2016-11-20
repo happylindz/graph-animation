@@ -168,6 +168,9 @@ ALGraph.prototype.createTourSortGraphByBFS = function(beginNode){
 	return res;
 }
 
+ALGraph.prototype.getAdjMatrix = function(){
+	return this.map;
+}
 
 
 

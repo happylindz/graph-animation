@@ -2,68 +2,77 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>ALGraph Algorithm</title>
+	<title>Graph Algorithm</title>
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 </head>
-<body>
+<body>	
+	
 
 	<div id="nav">
-		<ul>
-			<li>
-				<div class="form-group">
-			    <label for="add_node">节点操作:</label>
-			    <input type="text" class="form-control" id="node_name" placeholder="请输入节点名称">
-			  </div>
-			  <div class="form-group">
-			    <input type="text" class="form-control" id="node_popularity" placeholder="请输入节点欢迎度">
-			  </div>
-			  <div class="form-group">
-			  	<textarea id="node_desc" cols="30" rows="10" class="form-control" placeholder="请输入节点简介"></textarea>
-			  </div>
-			  <div class="form-group">
-			  	<input type="button" class="btn btn-primary" value="添加节点" id="add_node_btn">
-			  </div>
-			  <div class="form-group">
-			  	<input type="button" class="btn btn-primary" value="删除节点" id="delete_node_btn">
-			  </div>
-			</li>
-			<li>
-				<div class="form-group">
-			    <label for="add_edge">边操作:</label>
-			    <input type="text" class="form-control" id="edge_begin" placeholder="请输入起点">
-			  </div>
-			  <div class="form-group">
-			    <input type="text" class="form-control" id="edge_end" placeholder="请输入终点">
-			  </div>
-			  <div class="form-group">
-			  	<input type="text" class="form-control" id="edge_dist" placeholder="请输入距离">
-			  </div>
-			  <div class="form-group">
-			  	<input type="button" class="btn btn-primary" value="添加边" id="add_edge">
-			  </div>
-			  <div class="form-group">
-			  	<input type="button" class="btn btn-primary" value="删除边" id="delete_edge">
-			  </div>
-			</li>
-			<li>
-				<div class="form-group">
-					<label for="begin">路线图起点:</label>
-			    <input type="text" class="form-control" id="begin" placeholder="请输入起点">
-				</div>
-				<div class="form-group">
-			  	<input type="button" class="btn btn-primary traversal"  value="DFS深度遍历" id="dfsbtn" data-method="dfs">
-			  </div>
-			  <div class="form-group">
-			  	<input type="button" class="btn btn-primary traversal" value="BFS广度遍历" id="bfsbtn" data-method="bfs">
-			  </div>
-			</li>
-		</ul>
+		导航
 	</div>
+	 <ul class="topnav">
+	 	<li>
+	 		<a href="#" id="graph_matrix">Adjacent Matrix</a>
+	 	</li>
+	  <li>
+	    <a href="#">Node Operation</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="node_name" placeholder="Please enter a node name">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="node_popularity" placeholder="Please enter the node popularity">
+	      </div>
+	      <div class="form-group">
+	        <textarea id="node_desc" cols="30" rows="10" class="form-control input-sm" placeholder="Please enter a brief introduction to the node"></textarea>
+	      </div>
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-1" data-method="add" value="add" id="add_node_btn">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-2" data-method="delete" value="delete" id="delete_node_btn">
+	      </div>
+	    </ul>
+	  </li>
+	  <li>
+	    <a href="#">Edge Operation</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="edge_begin" placeholder="Please enter a starting point">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="edge_end" placeholder="Please enter an end point">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="edge_dist" placeholder="Please enter a distance">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-1" data-method="add" value="add" id="add_edge_btn">
+	      </div>
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-2" data-method="delete" value="delete" id="delete_edge_btn">
+	      </div>
+	    </ul>
+	  </li>
+	  <li><a href="#">Algorithm</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="begin" placeholder="Please enter a starting point">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary traversal btn-sm col-sm-offset-3"  value="DFS Traversal" id="dfsbtn" data-method="dfs">
+	      </div>
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary traversal btn-sm col-sm-offset-3" value="BFS Traversal" id="bfsbtn" data-method="bfs">
+	      </div>
+	    </ul>
+	  </li>
+	</ul>
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="bower_components/d3/d3.min.js"></script>
 	<script src="bower_components/bootbox.js/bootbox.js"></script>
+	<script src="js/Util.js"></script>
 	<script src="js/SVGGraph.js"></script>
 	<script src="js/init.js"></script>
 	<script src="js/main.js"></script>

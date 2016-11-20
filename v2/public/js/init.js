@@ -37,6 +37,5 @@
 		let graph = new SVGGraph(nodes, edges);
 		window.graph = graph;
 		graph.drawing();
-
 	});
 })();

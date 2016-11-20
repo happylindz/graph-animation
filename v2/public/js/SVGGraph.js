@@ -53,26 +53,34 @@ SVGGraph.prototype.tick = function(){
 
 SVGGraph.prototype.updateNode = function(){
 
-	this.svg_nodes.enter()
-									.append("circle")
-									.attr({
-										"r": function(node) {
-											return node.popularity * 4;
-										}
-									})
-									.style({
-										"fill": "#F6E8E9",
-										"stroke": "#A254A2"
-									})
-									.call(this.force.drag);
+	this.svg_nodes.enter().append("circle");
+	this.svg_nodes.exit().remove();
 
-	this.svg_nodes_texts.enter()
-											.append("text")
-											.attr({
+	this.svg_nodes.attr({
+									"r": function(node) {
+										return node.popularity * 4;
+									}
+								})
+								.style({
+									"fill": "#F6E8E9",
+									"stroke": "#A254A2"
+								})
+								.on("click", function(node){
+									if (d3.event.defaultPrevented) return;
+									alertBootbox(node.desc, "节点简介", null);
+								})
+								.call(this.force.drag);
+
+	this.svg_nodes_texts.enter().append("text");
+	this.svg_nodes_texts.exit().remove();
+
+	this.svg_nodes_texts.attr({
 												"dy": ".35em",
 												"text-anchor": "middle",
 												"x": function(d){
-													d3.select(this).append('tspan')
+													let tspan =  d3.select(this).select("tspan");
+													if(tspan.size() == 0){
+														d3.select(this).append('tspan')
 														.attr({
 															"x": 0,
 															"y": 0
@@ -80,18 +88,29 @@ SVGGraph.prototype.updateNode = function(){
 														.text(function (d) {
 															return d.name;
 														})
+													}else{
+														tspan.attr({
+															"x": 0,
+															"y": 0
+														})
+														.text(function (d) {
+															return d.name;
+														})
+													}
 												}
 											})
 											.style({
 												"fill": "#A254A2"
 											});
+
+	this.force.start();
 };
 
 SVGGraph.prototype.updateEdge = function(){
 
-	this.svg_edges.enter()
-								.append("path")
-								.style({
+	this.svg_edges.enter().append("path");
+	this.svg_edges.exit().remove();
+	this.svg_edges.style({
 									"stroke": "#B43232",
 									"stroke-width": 0.5
 								})
@@ -99,11 +118,14 @@ SVGGraph.prototype.updateEdge = function(){
 									"id": function (d, i) {
 										return "edgepath" + i;
 									}
+								}).attr("d", function(d) {
+									return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
 								});
 
-	svg_edge_texts = this.svg_edges_texts.enter()
-											 .append("text")
-											 .style({
+	svg_edge_texts = this.svg_edges_texts.enter().append("text");
+	this.svg_edges_texts.exit().remove();
+	svg_edge_texts.append("textPath");
+	this.svg_edges_texts.style({
 											 	"fill": "black",
 											 	"pointer-events": "none"
 											 })
@@ -122,15 +144,15 @@ SVGGraph.prototype.updateEdge = function(){
 														return dist / 2 + 15;
 												 	}.bind(this)
 											 });
-
-	svg_edge_texts.append("textPath")
-									.attr("xlink:href", function(d, i){
-										return "#edgepath" + i;
-									})
-									.style("pointer-events", "none")
-									.text(function (d) {
-										return d.dist + "00m";
-									});
+	this.svg_edges_texts.select("textPath")
+											.attr("xlink:href", function(d, i){
+												return "#edgepath" + i;
+											})
+											.style("pointer-events", "none")
+											.text(function (d) {
+												return d.dist + "00m";
+											});
+	this.force.start();
 
 }
 
@@ -162,12 +184,41 @@ SVGGraph.prototype.insertNode = function (name, desc, popularity) {
 		popularity: popularity
 	});
 
-	this.force.start();
 	this.svg_nodes       = this.svg_nodes.data(this.force.nodes())
 	this.svg_nodes_texts = this.svg_nodes_texts.data(this.force.nodes())
 	this.updateNode();							
 	
 }
+
+SVGGraph.prototype.deleteNode = function (nodeName){
+	let index = -1;
+	for(let i = 0, len = this.nodes_data.length; i < len; i++){
+		if(this.nodes_data[i].name == nodeName){
+			index = i;
+			break;
+		}
+	}
+	let removed = [];
+	this.nodes_data.splice(index, 1);
+	for(let i = 0, len = this.edges_data.length; i < len; i++){
+		if(this.edges_data[i].source.name == nodeName || this.edges_data[i].target.name == nodeName){
+			removed.unshift(i);
+		}	
+	}
+	for(let i = 0, len = removed.length; i < len; i++){
+		this.edges_data.splice(removed[i], 1);
+	}
+
+	this.svg_nodes       = this.svg_nodes.data(this.force.nodes())
+	this.svg_nodes_texts = this.svg_nodes_texts.data(this.force.nodes())
+	this.updateNode();		
+
+	this.svg_edges       = this.svg_edges.data(this.force.links());
+	this.svg_edges_texts = this.svg_edges_texts.data(this.force.links());
+	this.updateEdge();
+
+}
+
 SVGGraph.prototype.insertEdge = function (begin, end, dist) {
 
  	let beginNode, endNode;
@@ -185,7 +236,6 @@ SVGGraph.prototype.insertEdge = function (begin, end, dist) {
 		"target": endNode,
 		"dist": parseInt(dist)
 	});
-	this.force.start();
 
 	this.svg_edges       = this.svg_edges.data(this.force.links());
 	this.svg_edges_texts = this.svg_edges_texts.data(this.force.links());
@@ -193,5 +243,67 @@ SVGGraph.prototype.insertEdge = function (begin, end, dist) {
 
 }
 
+SVGGraph.prototype.deleteEdge = function(begin, end){
+	let index = -1;
+	for(let i = 0, len = this.edges_data.length; i < len; i++){
+		if((this.edges_data[i].source.name == begin && this.edges_data[i].target.name == end) || (this.edges_data[i].source.name == end && this.edges_data[i].target.name == begin)){		index = i;
+			break;
+		}
+	}
+	this.edges_data.splice(index, 1);
+	this.svg_edges       = this.svg_edges.data(this.force.links());
+	this.svg_edges_texts = this.svg_edges_texts.data(this.force.links());
+	this.updateEdge();
+}
+
+SVGGraph.prototype.displayTraversal = function(res){
+	for(let i = 0; i < res.length; i++){
+		setTimeout(function(){
+			this.svg_nodes.transition().duration(500).ease("linear").style("fill",function(node){
+				if(node.name == res[i]){
+					node.isVisited = true;
+					return "#A254A2";
+				}else if(node.isVisited == true){
+					return "#A95";
+				}else{
+					return "#F6E8E9";
+				}
+			})
+		}.bind(this), i * 1000);
+		setTimeout(function(){
+			this.svg_edges.transition().duration(500).ease("linear").style("stroke-width", function(line){
+				if((line.source.name == res[i] && line.target.name==res[i + 1]) || (line.source.name == res[i + 1] && line.target.name==res[i])){
+					return 3;
+				}else{
+					return 0.5;
+				}
+			})
+		}.bind(this), i * 1000 + 500);
+	}
+	return function(){
+		this.nodes_data.forEach(function(data){
+			data.isVisited = false;
+		});
+		this.svg_nodes.style("fill", "#F6E8E9");
+	}.bind(this);
+}
+
+SVGGraph.prototype.outputMatrix = function(matrix){
+	let res = "<table class='table table-striped'>";
+	res += "<thead><tr><th>#</th>";
+	for(let i = 0, len = this.nodes_data.length; i < len; i++){
+		res += "<th>" + this.nodes_data[i].name + "</th>";
+	}
+	res += "</tr></thead><tbody>";
+	for(let i = 0, len = this.nodes_data.length; i < len; i++){
+		res += "<tr><td>" + this.nodes_data[i].name + "</td>";
+		for(let j = 0, len = matrix.length; j < len ; j++){
+			res += "<td>" + matrix[i][j] + "</td>";
+		}
+		res += "</tr>";
+	}
+	res += "</tbody></table>";
+	return res;
+}
 
  

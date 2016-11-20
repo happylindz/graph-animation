@@ -20,8 +20,91 @@ circle{
 }
 
 #nav{
-	width: 200px;
-	position: fixed;
-	right: 200px;
-	top: 50px;
+  writing-mode:tb-rl;
+  position: fixed;
+  top: 100px;
+  right: 0;
+  margin: 20px;
+  font-size: 20px;
+  font-family: "CenturyGothicRegular", "Century Gothic", Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  padding: 30px 5px;
+}
+
+.topnav {
+  position: fixed;
+  top: 100px;
+  right: 0;
+  width: 213px;
+  padding: 40px 28px 25px 0;
+  font-family: "CenturyGothicRegular", "Century Gothic", Arial, Helvetica, sans-serif;
+  display: none;
+}
+
+ul.topnav {
+  padding: 0;
+  margin: 20px;
+  font-size: 1em;
+  line-height: 0.5em;
+  list-style: none;
+  background: transparent;
+}
+
+ul.topnav li {}
+
+ul.topnav li a {
+  line-height: 11px;
+  font-size: 11px;
+  padding: 10px 5px;
+  color: #000;
+  display: block;
+  text-decoration: none;
+  font-weight: bolder;
+  text-align: left;
+  text-indent: 10px;
+  /*background: #eee;*/
+}
+
+ul.topnav li a:hover {
+  background-color:#675C7C;
+  color:white;
+}
+
+ul.topnav ul {
+  margin: 0;
+  padding:  10px 3px 0;
+  display: none;
+}
+
+/*ul.topnav ul li {
+  margin: 0;
+  padding: 0;
+  clear: both;
+}
+*/
+/*ul.topnav ul li a {
+  padding-left: 20px;
+  font-size: 10px;
+  font-weight: normal;
+  outline:0;
+}*/
+/*
+ul.topnav ul li a:hover {
+  background-color:#D3C99C;
+  color:#675C7C;
+}
+
+ul.topnav ul ul li a {
+  color:silver;
+  padding-left: 40px;
+}
+
+ul.topnav ul ul li a:hover {
+  background-color:#D3CEB8;
+  color:#675C7C;
+}
+*/
+ul.topnav span{
+  float:right;
+  padding-right: 10px;
 }
