@@ -7,7 +7,9 @@ let app = express();
 let ALGraph = require('./ALGraph.js');
 let routes = require("./routes/index.js");
 
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));

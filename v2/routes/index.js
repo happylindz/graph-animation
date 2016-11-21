@@ -235,7 +235,7 @@ router.post("/node", function(req, res) {
 			method: method
 		});
 	});	
-})
+});
 
 router.all("/matrix", function(req, res){
 	let map = g.getAdjMatrix();
@@ -243,8 +243,36 @@ router.all("/matrix", function(req, res){
 		code: 0,
 		message: "获取邻接矩阵成功",
 		data: map
-	})
-})
+	});
+});
+
+router.post("/dijkstra", function(req, res){
+	let nodeName = req.body.nodeName;
+	let data = g.shortestPath(nodeName);
+	res.send({
+		code: 0,
+		message: "获取数据成功",
+		data: data
+	});
+});
+
+router.get("/kruskal", function(req, res){
+	let data = g.outputKruskal();
+	res.send({
+		code: 0,
+		message: "获取数据成功",
+		data: data
+	});
+});
+
+router.get("/prim", function (req, res) {
+	let data = g.outputPrim();
+	res.send({
+		code: 0,
+		message: "获取数据成功",
+		data: data
+	});
+});
 
 
 

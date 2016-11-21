@@ -34,6 +34,9 @@ SVGGraph.prototype.init = function(nodes, edges) {
 	this.force = force;
 
 }
+SVGGraph.prototype.findNodeName = function(index){
+	return this.nodes_data[index].name;
+}
 
 
 SVGGraph.prototype.transform = function(d){
@@ -48,6 +51,9 @@ SVGGraph.prototype.tick = function(){
 		});
 		this.svg_nodes.attr("transform", this.transform);
 		this.svg_nodes_texts.attr("transform", this.transform);
+		if(this.svg_path_texts){
+			this.svg_path_texts.attr("transform", this.transform);
+		}
 	}.bind(this));
 }
 
@@ -141,7 +147,7 @@ SVGGraph.prototype.updateEdge = function(){
 												 		radius.forEach(function(r){
 												 			dist -= r / 2;
 												 		})
-														return dist / 2 + 15;
+														return dist / 2 + 30;
 												 	}.bind(this)
 											 });
 	this.svg_edges_texts.select("textPath")
@@ -150,7 +156,7 @@ SVGGraph.prototype.updateEdge = function(){
 											})
 											.style("pointer-events", "none")
 											.text(function (d) {
-												return d.dist + "00m";
+												return d.dist;
 											});
 	this.force.start();
 
@@ -280,12 +286,6 @@ SVGGraph.prototype.displayTraversal = function(res){
 			})
 		}.bind(this), i * 1000 + 500);
 	}
-	return function(){
-		this.nodes_data.forEach(function(data){
-			data.isVisited = false;
-		});
-		this.svg_nodes.style("fill", "#F6E8E9");
-	}.bind(this);
 }
 
 SVGGraph.prototype.outputMatrix = function(matrix){
@@ -306,4 +306,204 @@ SVGGraph.prototype.outputMatrix = function(matrix){
 	return res;
 }
 
- 
+SVGGraph.prototype.outputDijkstra = function(data){
+	this.svg_path_texts = this.svg.append("g")
+														.attr("id", "svg_path_texts")
+														.selectAll("text")
+														.data(this.force.nodes())
+														.enter()
+														.append("text")
+														.attr({
+															"dy": ".35em",
+															"text-anchor": "middle",
+															"x": function(node){
+																return node.popularity * 4 + 5;
+															},
+															"y": function(node){
+																return node.popularity * 4 + 5;
+															}
+														})
+														.text(function(node){
+															return node.path;
+														})
+														.attr("transform", this.transform);
+	
+	for(let i = 0, index = 0, len = data.length; i < len; i++){
+
+		let name = data[i].node;
+		let dist = data[i].dist;
+		let selected = data[i].selected;
+		setTimeout(function(){
+			this.svg_nodes.transition().duration(600).ease("linear")
+					.style("fill", function(node){
+						if(selected == true && node.name == name){
+							node.isVisited = true;
+							return "#233142";
+						}
+						if(node.name == name){
+							return "#A254A2";
+						}else if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					})
+		}.bind(this), i * 1800);
+		if(data[i].selected == true){
+			index = i;
+		}
+		setTimeout(function(){
+			this.svg_edges.transition().duration(600).ease("linear").style("stroke-width", function(line){
+				if(i + 1 >= data.length || data[i + 1].selected == true){
+					return 0.5;
+				}
+				if((line.source.name == data[index].node && line.target.name == data[i + 1].node) || (line.source.name == data[i + 1].node && line.target.name == data[index].node)){
+					return 3;
+				}else{
+					return 0.5;
+				}
+			});
+		}.bind(this), i * 1800 + 600);		
+		setTimeout(function(){
+			this.svg_path_texts.transition().duration(600).ease("linear")
+					.text(function(node){
+						if(node.name == name){
+							node.path = dist;
+						}
+						return node.path;
+					});
+		}.bind(this), i * 1800 + 1200);
+
+	}
+	let distObj = {};
+	data.forEach(function(item){
+		if(!distObj[item.node]){
+			distObj[item.node] = item.dist;
+		}else{
+			distObj[item.node] = item.dist < distObj[item.node] ? item.dist : distObj[item.node];
+		}
+	});
+	let res = "<table class='table table-striped'>";
+	res += "<thead><tr><th>#</th>";
+	for(var key in distObj){
+		res += "<th>" + key + "</th>";
+	}
+	res += "</tr></thead><tbody><tr><th>" + data[0].node + "</th>";
+	for(var key in distObj){
+		res += "<th>" + distObj[key] + "</th>";
+	}
+	res += "</tr></tbody></table>";
+	return res;
+}
+
+SVGGraph.prototype.resetStyle = function(){
+	this.nodes_data.forEach(function(data){
+		data.isVisited = false;
+	});
+	this.edges_data.forEach(function(data){
+		data.isVisited = false;
+	});
+	this.svg_edges.style("stroke-width", function(line){
+		return 0.5;
+	});
+	this.svg_nodes.style("fill", "#F6E8E9");
+	if(this.svg_path_texts){
+		this.svg.select("#svg_path_texts").remove();
+		this.svg_path_texts = null;
+	}
+}
+
+SVGGraph.prototype.outputKruskal = function(edges){
+	for(let i = 0, len = edges.length; i < len; i++){
+		let edge = edges[i];
+		setTimeout(function(){	
+			this.svg_edges.transition().duration(1000).ease("linear").style("stroke-width", function(line){
+				if((line.source.name == edge.begin && line.target.name == edge.end) || (line.source.name == edge.end && line.target.name == edge.begin)){
+					line.isVisited = true;
+					return 3;
+				}else if(line.isVisited){
+					return 3;
+				}else{
+					return 0.5;
+				}
+			});
+			this.svg_nodes.transition().duration(1000).ease("linear")
+					.style("fill", function(node){
+						if(edge.begin == node.name || edge.end == node.name){
+							node.isVisited = true;
+							return "#A254A2";
+						}else if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					})
+		}.bind(this), 1500 * i);
+	}
+	setTimeout(function(){
+		this.svg_nodes.transition().duration(1000).ease("linear")
+					.style("fill", function(node){
+						if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					});
+	}.bind(this), 1500 * edges.length);
+}
+
+SVGGraph.prototype.outputPrim = function(edges){
+
+	for(let i = 0, len = edges.length; i < len; i++){
+		let edge = edges[i];
+		setTimeout(function(){
+			this.svg_nodes.transition().duration(600).ease("linear")
+					.style("fill", function(node){
+						if(edge.begin == node.name){
+							node.isVisited = true;
+							return "#A254A2";
+						}else if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					});
+		}.bind(this), i * 2000);
+		setTimeout(function(){
+			this.svg_edges.transition().duration(1000).ease("linear").style("stroke-width", function(line){
+				if((line.source.name == edge.begin && line.target.name == edge.end) || (line.source.name == edge.end && line.target.name == edge.begin)){
+					line.isVisited = true;
+					return 3;
+				}else if(line.isVisited){
+					return 3;
+				}else{
+					return 0.5;
+				}
+			});
+		}.bind(this), i * 2009 + 600);
+		setTimeout(function(){
+			this.svg_nodes.transition().duration(600).ease("linear")
+					.style("fill", function(node){
+						if(edge.end == node.name){
+							node.isVisited = true;
+							return "#A254A2";
+						}else if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					});
+		}.bind(this), i * 2000 + 1300);
+	}
+	setTimeout(function(){
+		this.svg_nodes.transition().duration(600).ease("linear")
+					.style("fill", function(node){
+						if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					});
+	}.bind(this), edges.length * 2000);
+}
+

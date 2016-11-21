@@ -14,6 +14,9 @@
 	</div>
 	 <ul class="topnav">
 	 	<li>
+	 		<a href="#" id="clear_style">Reset operation</a>
+	 	</li>
+	 	<li>
 	 		<a href="#" id="graph_matrix">Adjacent Matrix</a>
 	 	</li>
 	  <li>
@@ -54,18 +57,38 @@
 	      </div>
 	    </ul>
 	  </li>
-	  <li><a href="#">Algorithm</a>
+	  <li><a href="#">Traversal</a>
 	    <ul>
 	      <div class="form-group">
 	        <input type="text" class="form-control input-sm" id="begin" placeholder="Please enter a starting point">
 	      </div>
 	      <div class="form-group">
-	        <input type="button" class="btn btn-primary traversal btn-sm col-sm-offset-3"  value="DFS Traversal" id="dfsbtn" data-method="dfs">
+	        <input type="button" class="btn btn-primary traversal btn-sm btn-block"  value="DFS Traversal" id="dfsbtn" data-method="dfs">
 	      </div>
 	      <div class="form-group clearfix">
-	        <input type="button" class="btn btn-primary traversal btn-sm col-sm-offset-3" value="BFS Traversal" id="bfsbtn" data-method="bfs">
+	        <input type="button" class="btn btn-primary traversal btn-sm btn-block" value="BFS Traversal" id="bfsbtn" data-method="bfs">
 	      </div>
 	    </ul>
+	  </li>
+	  <li><a href="#">Shortest Path</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="beginNode" placeholder="Please enter a starting point">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="dijkstra" id="dijkstrabtn">
+	      </div>	 
+ 	    </ul>
+	  </li>
+	  <li><a href="#">Minimum Spanning Tree</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="kruskal" id="kruskalbtn">
+	      </div>	
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="prim" id="primbtn">
+	      </div>	  
+ 	    </ul>
 	  </li>
 	</ul>
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>

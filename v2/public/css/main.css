@@ -4,6 +4,7 @@
 	user-select: none;
 	-webkit-user-select: none;
 	list-style: none;
+  letter-spacing: 1px;
 }
 html, body{
 	height: 100%;
@@ -22,7 +23,7 @@ circle{
 #nav{
   writing-mode:tb-rl;
   position: fixed;
-  top: 100px;
+  top: 50px;
   right: 0;
   margin: 20px;
   font-size: 20px;
@@ -35,7 +36,7 @@ circle{
   position: fixed;
   top: 100px;
   right: 0;
-  width: 213px;
+  width: 300px;
   padding: 40px 28px 25px 0;
   font-family: "CenturyGothicRegular", "Century Gothic", Arial, Helvetica, sans-serif;
   display: none;

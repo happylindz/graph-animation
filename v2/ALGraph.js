@@ -29,7 +29,7 @@ ALGraph.prototype.insertNode = function(name, desc, popularity){
 	}else{
 		console.log("ALGraph cannot insert node");
 	}
-}
+};
 
 ALGraph.prototype.insertEdge = function(begin, end, dist){
 	for(let i = 0; i < this.opacity; i++){
@@ -53,13 +53,13 @@ ALGraph.prototype.insertEdge = function(begin, end, dist){
 			}
 		}
 	}
-}
+};
 
 ALGraph.prototype.insertUndirectedEdge = function(begin, end, dist){
 	this.insertEdge(begin, end, dist);
 	this.insertEdge(end, begin, dist);
 	this.edgeCount++;
-}
+};
 
 ALGraph.prototype.findNodeIndex = function(name){
 	for(let i = 0; i < this.opacity; i++){
@@ -68,13 +68,13 @@ ALGraph.prototype.findNodeIndex = function(name){
 		}
 	}
 	return -1;
-}
+};
 
 ALGraph.prototype.resetNodes = function(){
 	for(let i = 0; i < this.opacity; i++){
 		this.nodeArr[i].isVisited = false;
 	}
-}
+};
 
 ALGraph.prototype.createGraph = function(){
 	for(let i = 0; i < this.opacity; i++){
@@ -94,7 +94,7 @@ ALGraph.prototype.outputGraph = function(){
 		}
 		console.log("\n");
 	}
-}
+};
 
 ALGraph.prototype.haveAllNodeVisited = function(){
 	let nodeArr = this.nodeArr;
@@ -121,7 +121,7 @@ ALGraph.prototype.DFSTraverse = function(index, res){
 			}
 		}
 	}
-}
+};
 
 ALGraph.prototype.createTourSortGraphByDFS = function(beginNode){
 	
@@ -156,7 +156,7 @@ ALGraph.prototype.BFSTraverse = function(index, res){
 		res.push(this.nodeArr[index].name);
 	}
 
-}
+};
 
 ALGraph.prototype.createTourSortGraphByBFS = function(beginNode){
 	let res = [];
@@ -170,8 +170,132 @@ ALGraph.prototype.createTourSortGraphByBFS = function(beginNode){
 
 ALGraph.prototype.getAdjMatrix = function(){
 	return this.map;
+};
+
+ALGraph.prototype.getNodeName = function(index){
+	return this.nodeArr[index].name;
 }
 
+ALGraph.prototype.shortestPath = function(beginNode){
+	let res = [];
+	let unselected = [];
+	let selected = [];
+	for(let i = 0; i < this.opacity; i++){
+		selected[i] = 32767;
+		unselected[i] = 32767;
+	}
+	let path = 0;
+	let index = this.findNodeIndex(beginNode);
+	while(path >= 0 && index >= 0){
+		selected[index] = path;
+		unselected[index] = -1;
+		res.push({
+			node: this.getNodeName(index),
+			dist: selected[index],
+			selected: true,
+		})
+		let edge = this.nodeArr[index].pEdge;
+		while(edge != null){
+			let idx = this.findNodeIndex(edge.nextNodeName);
+			if(selected[idx] == 32767){
+				let dist = edge.distance;
+				unselected[idx] = (path + dist) < unselected[idx] ? (path + dist): unselected[idx];
+				let min = 32767;
+				res.push({
+					node: this.getNodeName(idx),
+					dist: unselected[idx],
+					selected: false
+				});
+			}
+			edge = edge.pNext;
+		}
+		let min = 32767;
+		index = -1;
+		for(let i = 0; i < this.opacity; i++){
+			if(unselected[i] > 0 && min > unselected[i]){
+				min = unselected[i];
+				index = i;
+			}
+		}
+		path = min;
+	}
+	return res;
+};
+
+
+ALGraph.prototype.outputKruskal = function(){
+	let res = [];
+	let vset = [];
+	let edges = []
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
+		vset[i] = i;
+	}
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
+		for(let j = 0; j < i; j++){
+			if(this.map[i][j] != 32767 && this.map[i][j] != 0){
+				edges.push({
+					begin: i,
+					end: j,
+					dist: this.map[i][j]
+				});
+			}
+		}
+	}
+	edges.sort(function(edge1, edge2){
+		return edge1.dist - edge2.dist;
+	});
+	let count = 1, idx = 0;
+	while(count < this.nodeArr.length && idx < edges.length){
+		let sn1 = vset[edges[idx].begin];
+		let sn2 = vset[edges[idx].end];
+		if(sn1 != sn2){
+			count++;
+			res.push({
+				begin: this.getNodeName(edges[idx].begin),
+				end: this.getNodeName(edges[idx].end),
+				dist: edges[idx].dist
+			})
+			for(let i = 0, len = vset.length; i < len; i++){
+				if(vset[i] == sn1){
+					vset[i] = sn2;
+				}
+			}
+		}
+		idx++;
+	}	
+	return res;
+};
+ALGraph.prototype.outputPrim = function(){
+	let result = [];
+	let index = Math.floor(Math.random() * this.nodeArr.length);
+	let edges = [];
+	while(!this.haveAllNodeVisited()){
+		this.nodeArr[index].isVisited = true;
+		let edge = this.nodeArr[index].pEdge;
+		while(edge != null){
+			edges.push({
+				begin: this.nodeArr[index].name,
+				end: edge.nextNodeName,
+				dist: edge.distance
+			});
+			edge = edge.pNext;
+		}
+		while(!this.haveAllNodeVisited()){
+			edges.sort(function(edge1, edge2){
+				return edge1.dist - edge2.dist;
+			});
+			let e = edges[0];
+			edges.splice(0, 1);
+			if(!this.nodeArr[this.findNodeIndex(e.end)].isVisited){
+				index = this.findNodeIndex(e.end);
+				result.push(e);
+				break;
+			}
+		}
+	}
+	this.resetNodes();
+	return result;
+}
 
 
 module.exports = ALGraph;

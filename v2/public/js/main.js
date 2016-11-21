@@ -9,6 +9,10 @@ $(document).ready(function() {
   $("#nav").click(function(){
   	hideNav();
   });
+  $(document.body).on("click", "#clear_style", function(){
+  	graph.resetStyle();
+  	return false;
+  });
 
   $(document.body).on("click", ".traversal", function(){
 		let beginNode = $('#begin').val();
@@ -35,13 +39,15 @@ $(document).ready(function() {
 			showNav();	  
 			if(res.code == 0){
 				let data = res.data;
-				let callback = graph.displayTraversal(res.data);
+				graph.displayTraversal(res.data);
 				setTimeout(function(){
 					let message = data[0];
 					for(let i = 1, len = data.length; i < len; i++){
 						message += " --> " + data[i];
 					}
-					alertBootbox(message, "导游路线图", callback);
+					alertBootbox(message, "Node Traversal", function(){
+						graph.resetStyle();
+					});
 				}, data.length * 1000);
 			}else{
 				alertBootbox(res.message);
@@ -131,25 +137,82 @@ $(document).ready(function() {
 			console.log("error" + err);
 		});		
 	});
-		$(document.body).on("click", "#graph_matrix", function(){
-			$.ajax({
-				url: "/matrix",
-				type: "get",
-				contentType: "application/json"
-			})
-			.done(function(res) {
-				let result = graph.outputMatrix(res.data);
-				alertBootbox(result, "");		
-			})
-			.fail(function() {
-				console.log("error");
-			})
-			.always(function() {
-				console.log("complete");
-			});
-			
-			return false;
+	$(document.body).on("click", "#graph_matrix", function(){
+		$.ajax({
+			url: "/matrix",
+			type: "get",
+			contentType: "application/json"
+		})
+		.done(function(res) {
+			 showNav();	  
+			let result = graph.outputMatrix(res.data);
+			alertBootbox(result, "");		
+		})
+		.fail(function() {
+			console.log("error");
+		})		
+		return false;
+	});
+
+	$(document.body).on("click", "#dijkstrabtn", function(){
+		let data = {
+			nodeName: $("#beginNode").val()
+		}
+		$.ajax({
+			url: '/dijkstra',
+			type: 'post',
+			dataType: 'json',
+			data: JSON.stringify(data),		
+			contentType: "application/json"
+		})
+		.done(function(res) {
+			showNav();
+			let message;
+			if(res.code == 0){
+				 message = graph.outputDijkstra(res.data);
+			};
+			let time = res.data.length * 1800;
+			setTimeout(function(){
+				alertBootbox(message, "Dijkstra 结果", function(){
+					graph.resetStyle();
+				});
+			}, time);
+
+		})
+		.fail(function() {
+			console.log("error");
+		})
+	});
+	$(document.body).on("click", "#kruskalbtn", function(){
+		$.ajax({
+			url: '/kruskal',
+			type: 'get',
+			contentType: "application/json"
+		})
+		.done(function(res) {
+			if(res.code == 0){
+				graph.outputKruskal(res.data);
+			}
+		})
+		.fail(function(err) {
+			console.log("error" + err);
 		});
+	});
+	$(document.body).on("click", "#primbtn", function(){
+		$.ajax({
+			url: '/prim',
+			type: "get",
+			contentType: "application/json"
+		})
+		.done(function(res) {
+			if(res.code == 0){
+				graph.outputPrim(res.data);
+			}
+		})
+		.fail(function(err) {
+			console.log("error" + err);
+		});
+	});
 });
 
 
