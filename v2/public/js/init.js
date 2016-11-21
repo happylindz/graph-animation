@@ -34,7 +34,7 @@
 
 	Promise.all([nodes_fetch, edges_fetch]).then(function ([nodes, edges]){
 
-		let graph = new SVGGraph(nodes, edges);
+		let graph = new Graph(nodes, edges);
 		window.graph = graph;
 		graph.drawing();
 		

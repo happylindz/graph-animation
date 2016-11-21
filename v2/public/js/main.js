@@ -9,6 +9,7 @@ $(document).ready(function() {
   $("#nav").click(function(){
   	hideNav();
   });
+
   $(document.body).on("click", "#clear_style", function(){
   	graph.resetStyle();
   	return false;
@@ -16,9 +17,10 @@ $(document).ready(function() {
 
   $(document.body).on("click", ".traversal", function(){
 		let beginNode = $('#begin').val();
+		let method = $(this).attr("data-method")
 		let data = JSON.stringify({
 						name: beginNode,
-						method: $(this).attr("data-method")
+						method: method
 					});
 		new Promise(function(resolve, reject){
 				$.ajax({
@@ -45,15 +47,13 @@ $(document).ready(function() {
 					for(let i = 1, len = data.length; i < len; i++){
 						message += " --> " + data[i];
 					}
-					alertBootbox(message, "Node Traversal", function(){
-						graph.resetStyle();
-					});
+					alertBootbox(message, "Node " + method.toUpperCase() + " Traversal:");
 				}, data.length * 1000);
 			}else{
 				alertBootbox(res.message);
 			}				
 		}).catch(function(error){
-			let message = "服务器发生故障";
+			let message = "Server Error";
 			alertBootbox(message);
 		});
 	});
@@ -79,6 +79,7 @@ $(document).ready(function() {
 			contentType: "application/json"
 		})
 		.done(function(res) {
+			showNav();	  
 			let callback = null;
 			if(res.code == 0){
 				if(res.method =="add"){
@@ -119,6 +120,7 @@ $(document).ready(function() {
 			contentType: "application/json"
 		})
 		.done(function(res) {
+			howNav();	  
 			let callback = null;
 			if(res.code == 0){
 				if(res.method == "add"){
@@ -144,7 +146,7 @@ $(document).ready(function() {
 			contentType: "application/json"
 		})
 		.done(function(res) {
-			 showNav();	  
+			showNav();	  
 			let result = graph.outputMatrix(res.data);
 			alertBootbox(result, "");		
 		})
@@ -173,11 +175,8 @@ $(document).ready(function() {
 			};
 			let time = res.data.length * 1800;
 			setTimeout(function(){
-				alertBootbox(message, "Dijkstra 结果", function(){
-					graph.resetStyle();
-				});
+				alertBootbox(message, "Dijkstra Result:");
 			}, time);
-
 		})
 		.fail(function() {
 			console.log("error");
@@ -190,9 +189,15 @@ $(document).ready(function() {
 			contentType: "application/json"
 		})
 		.done(function(res) {
+			showNav();	  
+			let message;
 			if(res.code == 0){
-				graph.outputKruskal(res.data);
+				message = graph.outputKruskal(res.data);
 			}
+			let time = res.data.length * 1500 + 1000;
+			setTimeout(function(){
+				alertBootbox(message, "Kruskal Result:");
+			}, time);
 		})
 		.fail(function(err) {
 			console.log("error" + err);
@@ -205,14 +210,64 @@ $(document).ready(function() {
 			contentType: "application/json"
 		})
 		.done(function(res) {
+			showNav();	
+			let message;  
 			if(res.code == 0){
-				graph.outputPrim(res.data);
+				message = graph.outputPrim(res.data);
 			}
+			let time = res.data.length * 2000 + 1000;
+			setTimeout(function(){
+				alertBootbox(message, "Prim Result:");
+			}, time);
 		})
 		.fail(function(err) {
 			console.log("error" + err);
 		});
 	});
+	$(document.body).on("click", "#searchbtn", function(){
+		let data = {
+			keyword: $('#keyword').val()
+		}
+		$.ajax({
+			url: '/search',
+			type: "post",
+			data: JSON.stringify(data),
+			dataType: 'json',
+			contentType: "application/json"
+		})
+		.done(function(res) {
+			showNav();	
+			let message = "";
+			if(res.code == 0){
+				message = graph.searchKeyword(res.data);
+			}
+			alertBootbox(message, "Search Result:");
+		})
+		.fail(function(err) {
+			console.log("error" + err);
+		});
+	});
+
+	$(document.body).on("click", "#sortbtn", function(){
+		$.ajax({
+			url: '/sort',
+			type: "get",
+			contentType: "application/json"
+		})
+		.done(function(res) {
+			showNav();	
+			let message;
+			if(res.code == 0){
+				message = graph.outputSortResult(res.data);
+			}
+			alertBootbox(message, "Popularity Sort Result:");
+
+		})
+		.fail(function(err) {
+			console.log("error" + err);
+		});
+	});
+
 });
 
 

@@ -21,20 +21,22 @@ circle{
 }
 
 #nav{
-  writing-mode:tb-rl;
   position: fixed;
-  top: 50px;
+  top: 80px;
   right: 0;
-  margin: 20px;
-  font-size: 20px;
+  font-size: 15px;
   font-family: "CenturyGothicRegular", "Century Gothic", Arial, Helvetica, sans-serif;
   cursor: pointer;
-  padding: 30px 5px;
+  width: 250px;
+  text-indent: 30px;
+  line-height: 35px;
+  font-weight: bolder;
+
 }
 
 .topnav {
   position: fixed;
-  top: 100px;
+  top: 80px;
   right: 0;
   width: 300px;
   padding: 40px 28px 25px 0;
@@ -66,7 +68,7 @@ ul.topnav li a {
   /*background: #eee;*/
 }
 
-ul.topnav li a:hover {
+ul.topnav li a:hover, #nav:hover {
   background-color:#675C7C;
   color:white;
 }

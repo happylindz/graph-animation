@@ -1,12 +1,12 @@
 {
 	"nodes":[
-			{"name":"北门", "popularity":8, "desc": ""},
-			{"name":"狮子山", "popularity":6, "desc": ""},
-			{"name":"仙云石", "popularity":10, "desc": ""},
-			{"name":"一线天", "popularity":9, "desc": ""},
-			{"name":"飞流瀑", "popularity":6.5, "desc": ""},
-			{"name":"仙武湖", "popularity":7, "desc": ""},
-			{"name":"九曲桥", "popularity":7, "desc": ""},
-			{"name":"观云台", "popularity":9.5, "desc": ""}
+			{"name":"北门", "popularity":8, "desc": "", "path": 32767},
+			{"name":"狮子山", "popularity":6, "desc": "", "path": 32767},
+			{"name":"仙云石", "popularity":10, "desc": "", "path": 32767},
+			{"name":"一线天", "popularity":9, "desc": "", "path": 32767},
+			{"name":"飞流瀑", "popularity":6.5, "desc": "", "path": 32767},
+			{"name":"仙武湖", "popularity":7, "desc": "", "path": 32767},
+			{"name":"九曲桥", "popularity":7, "desc": "", "path": 32767},
+			{"name":"观云台", "popularity":9.5, "desc": "", "path": 32767}
 	]
 }

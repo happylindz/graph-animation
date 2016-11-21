@@ -30,13 +30,14 @@ $(document).ready(function(){
 });
 
 function hideNav(){
-	$("#nav").animate({"width": "toggle"}, 600, function () {
-		$(".topnav").animate({"height": "toggle"}, 600);
+	$("#nav").delay(200).animate({"width": "0"}, 600, function () {
+		$(".topnav").delay(200).animate({"height": "toggle"}, 600);
 	});
 }
+
 function showNav(){
-	$(".topnav").animate({height:'toggle'}, 600, function(){
-		$("#nav").animate({width:'toggle'}, 600);
+	$(".topnav").delay(200).animate({height:'toggle'}, 600, function(){
+		$("#nav").delay(200).animate({width:'250px'}, 600);
 	});
 }
 
@@ -57,9 +58,8 @@ function alertBootbox(message, title, callback){
 		animate: true,
 	});	
 	box.css({
-		'top': '50%',
 		'margin-top': function () {
-		  return -(box.height() / 2);
+		  return 100;
 		}
 	});
 }

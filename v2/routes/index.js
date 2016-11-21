@@ -8,13 +8,13 @@ router.post("/nodes", function(req, res) {
 		 .then(function (contents) {
 				res.send({
 					code: 0,
-					message: "读取节点成功",
+					message: "Read node successful.",
 					data: JSON.parse(contents)
 				});
 		 }).catch(function(err){
 		 	res.send({
 				code: 1,
-				mesages: "服务器发生故障，无法获取数据"
+				mesages: "The server has failed and can not get data."
 			});
 		});
 });
@@ -24,13 +24,13 @@ router.post("/edges", function(req, res) {
 			.then(function (contents) {
 				res.send({
 					code: 0,
-					message: "读取边成功",
+					message: "The read edge was successful.",
 					data: JSON.parse(contents)
 				});
 			}).catch(function (err) {
 				res.send({
 					code: 1,
-					mesages: "服务器发生故障，无法获取数据"
+					mesages: "The server has failed and can not get data."
 				});
 			});
 });
@@ -53,7 +53,7 @@ router.post("/traversal", function(req, res) {
 		message = "";
 	} else {
 		code = 1;
-		message = "输入有误，找到起点。";
+		message = "Input is wrong, find the starting point.";
 	}
 
 	res.send({
@@ -90,23 +90,23 @@ router.post("/edge", function(req, res) {
 							dist: dist
 						})
 						code = 0;
-						message = "成功添加边";
+						message = "Added edge successfully.";
 					}else{
 						code = 2;
-						message = "该边已存在，请勿重复添加";
+						message = "The edge already exists, do not add it again.";
 					}
 				}else if(method == "delete"){
 					if(index == -1){
 						code = 3;
-						message = "找不到该边";
+						message = "The edge could not be found.";
 					}else {
 						edges.splice(index, 1);
 						code = 0;
-						message = "成功删除该边";
+						message = "The edge was successfully deleted.";
 					}
 				}else{
 					code = 4;
-					message = "输入指令有误";
+					message = "The input command is incorrect.";
 				}
 				return edges;
 			}).then(function(edges){
@@ -134,7 +134,7 @@ router.post("/edge", function(req, res) {
 			.catch(function (err) {
 				res.send({
 					code: 1,
-					message: "服务器发生故障，无法获取数据",
+					message: "The server has failed and can not get data",
 					method: method
 				});
 			});
@@ -169,20 +169,20 @@ router.post("/node", function(req, res) {
 					popularity: popularity
 				})
 				code = 0;
-				message = "成功添加节点";
+				message = "Node was successfully added";
 			}else{
 				code = 2;
-				message = "该节点已经存在， 请勿重复添加。";
+				message = "The node already exists, do not add it again.";
 			}
 		}else if(method == "delete"){
 			if (index == -1) {
 				code = 3;
-				message = "找不到该节点";
+				message = "The node was not found";
 			} else {
 				console.log(nodes[index]);
 				nodes.splice(index, 1);
 				code = 0;
-				message = "成功删除节点";
+				message = "The node was successfully deleted";
 				let content = fs.readFileSync("./test/edges_data.json");
 				edges = JSON.parse(content).edges;
 				for(let i = 0, len = edges.length; i < len; i++){
@@ -190,7 +190,6 @@ router.post("/node", function(req, res) {
 						removed_edges.unshift(i);
 					}
 				}
-				console.log(removed_edges);
 				for(let i = 0, len = removed_edges.length; i < len; i++){
 					edges.splice(removed_edges[i], 1);
 				}
@@ -198,7 +197,7 @@ router.post("/node", function(req, res) {
 			}
 		}else{
 			code = 4;
-			message = "输入指令有误";
+			message = "The input command is incorrect";
 		}
 		return nodes;
 	}).then(function(nodes){
@@ -231,7 +230,7 @@ router.post("/node", function(req, res) {
 	}).catch(function (err) {
 		res.send({
 			code: 1,
-			message: "服务器发生故障，无法获取数据",
+			message: "The server has failed and can not get data",
 			method: method
 		});
 	});	
@@ -241,7 +240,7 @@ router.all("/matrix", function(req, res){
 	let map = g.getAdjMatrix();
 	res.send({
 		code: 0,
-		message: "获取邻接矩阵成功",
+		message: "Get adjacency matrix success",
 		data: map
 	});
 });
@@ -251,7 +250,7 @@ router.post("/dijkstra", function(req, res){
 	let data = g.shortestPath(nodeName);
 	res.send({
 		code: 0,
-		message: "获取数据成功",
+		message: "Get data success",
 		data: data
 	});
 });
@@ -260,7 +259,7 @@ router.get("/kruskal", function(req, res){
 	let data = g.outputKruskal();
 	res.send({
 		code: 0,
-		message: "获取数据成功",
+		message: "Get data success",
 		data: data
 	});
 });
@@ -269,11 +268,25 @@ router.get("/prim", function (req, res) {
 	let data = g.outputPrim();
 	res.send({
 		code: 0,
-		message: "获取数据成功",
+		message: "Get data success",
 		data: data
 	});
 });
 
+router.get("/sort", function(req, res){
+	let data = g.sortByPopularity();
+		res.send({
+		code: 0,
+		data: data
+	});
+});
 
+router.post("/search", function(req, res){
+	let data = g.searchKeyword(req.body.keyword);
+	res.send({
+		code: 0,
+		data: data
+	});
+});
 
 module.exports = router;

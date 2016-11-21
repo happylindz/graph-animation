@@ -1,10 +1,10 @@
-function SVGGraph(nodes, edges){
+function Graph(nodes, edges){
 		this.width = $("body").width();
 		this.height = $("body").height();
 		this.init(nodes, edges);
 }
 
-SVGGraph.prototype.init = function(nodes, edges) {
+Graph.prototype.init = function(nodes, edges) {
 
 	edges.forEach(function (edge) {
 		for(let i = 0, len = nodes.length; i < len; i++){
@@ -34,17 +34,17 @@ SVGGraph.prototype.init = function(nodes, edges) {
 	this.force = force;
 
 }
-SVGGraph.prototype.findNodeName = function(index){
+Graph.prototype.findNodeName = function(index){
 	return this.nodes_data[index].name;
 }
 
 
-SVGGraph.prototype.transform = function(d){
+Graph.prototype.transform = function(d){
 	return "translate(" + (d.x) + "," + (d.y) + ")";
 };
 
 
-SVGGraph.prototype.tick = function(){
+Graph.prototype.tick = function(){
 	this.force.on("tick", function(){
 		this.svg_edges.attr("d", function(d) {
 			return 'M '+d.source.x+' '+d.source.y+' L '+ d.target.x +' '+d.target.y;
@@ -57,7 +57,7 @@ SVGGraph.prototype.tick = function(){
 	}.bind(this));
 }
 
-SVGGraph.prototype.updateNode = function(){
+Graph.prototype.updateNode = function(){
 
 	this.svg_nodes.enter().append("circle");
 	this.svg_nodes.exit().remove();
@@ -73,7 +73,9 @@ SVGGraph.prototype.updateNode = function(){
 								})
 								.on("click", function(node){
 									if (d3.event.defaultPrevented) return;
-									alertBootbox(node.desc, "节点简介", null);
+									if(node.desc != ""){
+										alertBootbox(node.desc, "Node Description:", null);
+									}
 								})
 								.call(this.force.drag);
 
@@ -112,7 +114,7 @@ SVGGraph.prototype.updateNode = function(){
 	this.force.start();
 };
 
-SVGGraph.prototype.updateEdge = function(){
+Graph.prototype.updateEdge = function(){
 
 	this.svg_edges.enter().append("path");
 	this.svg_edges.exit().remove();
@@ -163,7 +165,7 @@ SVGGraph.prototype.updateEdge = function(){
 }
 
 
-SVGGraph.prototype.drawing = function () {
+Graph.prototype.drawing = function () {
 
 	let svg = d3.select("body")
 							.append("svg")
@@ -182,7 +184,7 @@ SVGGraph.prototype.drawing = function () {
 
 }
 
-SVGGraph.prototype.insertNode = function (name, desc, popularity) {
+Graph.prototype.insertNode = function (name, desc, popularity) {
 
 	this.nodes_data.push({
 		name: name,
@@ -196,7 +198,7 @@ SVGGraph.prototype.insertNode = function (name, desc, popularity) {
 	
 }
 
-SVGGraph.prototype.deleteNode = function (nodeName){
+Graph.prototype.deleteNode = function (nodeName){
 	let index = -1;
 	for(let i = 0, len = this.nodes_data.length; i < len; i++){
 		if(this.nodes_data[i].name == nodeName){
@@ -225,7 +227,7 @@ SVGGraph.prototype.deleteNode = function (nodeName){
 
 }
 
-SVGGraph.prototype.insertEdge = function (begin, end, dist) {
+Graph.prototype.insertEdge = function (begin, end, dist) {
 
  	let beginNode, endNode;
 	this.nodes_data.forEach(function (node) {
@@ -249,7 +251,7 @@ SVGGraph.prototype.insertEdge = function (begin, end, dist) {
 
 }
 
-SVGGraph.prototype.deleteEdge = function(begin, end){
+Graph.prototype.deleteEdge = function(begin, end){
 	let index = -1;
 	for(let i = 0, len = this.edges_data.length; i < len; i++){
 		if((this.edges_data[i].source.name == begin && this.edges_data[i].target.name == end) || (this.edges_data[i].source.name == end && this.edges_data[i].target.name == begin)){		index = i;
@@ -262,7 +264,7 @@ SVGGraph.prototype.deleteEdge = function(begin, end){
 	this.updateEdge();
 }
 
-SVGGraph.prototype.displayTraversal = function(res){
+Graph.prototype.displayTraversal = function(res){
 	for(let i = 0; i < res.length; i++){
 		setTimeout(function(){
 			this.svg_nodes.transition().duration(500).ease("linear").style("fill",function(node){
@@ -288,7 +290,7 @@ SVGGraph.prototype.displayTraversal = function(res){
 	}
 }
 
-SVGGraph.prototype.outputMatrix = function(matrix){
+Graph.prototype.outputMatrix = function(matrix){
 	let res = "<table class='table table-striped'>";
 	res += "<thead><tr><th>#</th>";
 	for(let i = 0, len = this.nodes_data.length; i < len; i++){
@@ -306,7 +308,7 @@ SVGGraph.prototype.outputMatrix = function(matrix){
 	return res;
 }
 
-SVGGraph.prototype.outputDijkstra = function(data){
+Graph.prototype.outputDijkstra = function(data){
 	this.svg_path_texts = this.svg.append("g")
 														.attr("id", "svg_path_texts")
 														.selectAll("text")
@@ -375,6 +377,16 @@ SVGGraph.prototype.outputDijkstra = function(data){
 		}.bind(this), i * 1800 + 1200);
 
 	}
+	setTimeout(function(){
+			this.svg_nodes.transition().duration(600).ease("linear")
+					.style("fill", function(node){
+						if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					})
+	}.bind(this), data.length * 1800);
 	let distObj = {};
 	data.forEach(function(item){
 		if(!distObj[item.node]){
@@ -396,7 +408,7 @@ SVGGraph.prototype.outputDijkstra = function(data){
 	return res;
 }
 
-SVGGraph.prototype.resetStyle = function(){
+Graph.prototype.resetStyle = function(){
 	this.nodes_data.forEach(function(data){
 		data.isVisited = false;
 	});
@@ -412,8 +424,18 @@ SVGGraph.prototype.resetStyle = function(){
 		this.svg_path_texts = null;
 	}
 }
+Graph.prototype.outputRoads = function(edges){
+	let message = "<table class='table table-striped'>";
+	message += "<thead><tr><th>Roads:</th></tr></thead>";
+	message += "<tbody>"
+	for(let i = 0, len = edges.length; i < len; i++){
+		message += "<tr><th>" + (i + 1) + ". from " + edges[i].begin + " to " + edges[i].end + ' repair a road.' + "</th></tr>";
+	}
+	message += "</tbody></table>";
+	return message;
+}
 
-SVGGraph.prototype.outputKruskal = function(edges){
+Graph.prototype.outputKruskal = function(edges){
 	for(let i = 0, len = edges.length; i < len; i++){
 		let edge = edges[i];
 		setTimeout(function(){	
@@ -450,9 +472,10 @@ SVGGraph.prototype.outputKruskal = function(edges){
 						}
 					});
 	}.bind(this), 1500 * edges.length);
+	return this.outputRoads(edges);
 }
 
-SVGGraph.prototype.outputPrim = function(edges){
+Graph.prototype.outputPrim = function(edges){
 
 	for(let i = 0, len = edges.length; i < len; i++){
 		let edge = edges[i];
@@ -470,7 +493,7 @@ SVGGraph.prototype.outputPrim = function(edges){
 					});
 		}.bind(this), i * 2000);
 		setTimeout(function(){
-			this.svg_edges.transition().duration(1000).ease("linear").style("stroke-width", function(line){
+			this.svg_edges.transition().duration(700).ease("linear").style("stroke-width", function(line){
 				if((line.source.name == edge.begin && line.target.name == edge.end) || (line.source.name == edge.end && line.target.name == edge.begin)){
 					line.isVisited = true;
 					return 3;
@@ -480,7 +503,7 @@ SVGGraph.prototype.outputPrim = function(edges){
 					return 0.5;
 				}
 			});
-		}.bind(this), i * 2009 + 600);
+		}.bind(this), i * 2000 + 600);
 		setTimeout(function(){
 			this.svg_nodes.transition().duration(600).ease("linear")
 					.style("fill", function(node){
@@ -505,5 +528,31 @@ SVGGraph.prototype.outputPrim = function(edges){
 						}
 					});
 	}.bind(this), edges.length * 2000);
+	return this.outputRoads(edges);
 }
 
+Graph.prototype.outputSortResult = function(data){
+	if(data.length == 0){
+		return "Failed to find related nodes";
+	}
+	let message = "<table class='table table-striped'>";
+	message += "<thead><tr><th>Ranking</th><th>Name</th><th>Popularity</th></thead><tbody>";
+	for(let i = 0, len = data.length; i < len; i++){
+		message += "<tr><th>" + (i + 1) + "</th><th>" + data[i].name + "</th><th>" + data[i].popularity + "</th></tr>";
+	}
+	message += "</tbody></table>";
+	return message;
+}
+Graph.prototype.searchKeyword = function(data){
+	if(data.length == 0){
+		return "The keyword could not be found";
+	}
+	let message = "<div>";
+	for(let i = 0; i < data.length; i++){
+		message += "<div><h3>" + data[i].name + "</h3>";
+		message += "<p>Popularity: " + data[i].popularity + "</p>";
+		message += "<p>Description: " + data[i].desc  + "</p></div>";
+	}
+	message += "</div>";
+	return message;
+}

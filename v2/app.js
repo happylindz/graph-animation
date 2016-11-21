@@ -17,7 +17,7 @@ app.use(express.static(__dirname + '/public'));
 global.initData = function() {
 
 	let nodes = JSON.parse(fs.readFileSync("./test/nodes_data.json")).nodes;
-	let g = new ALGraph(nodes.length);
+	let g = new ALGraph();
 	nodes.forEach(function(node) {
 		g.insertNode(node.name, node.desc, node.popularity);
 	})
@@ -33,6 +33,7 @@ global.initData = function() {
 }
 
 global.g = initData();
+g.outputGraph();
 
 app.use("/", routes);
 app.listen(3000, function() {

@@ -10,9 +10,9 @@
 	
 
 	<div id="nav">
-		导航
+		Navigation
 	</div>
-	 <ul class="topnav">
+	<ul class="topnav">
 	 	<li>
 	 		<a href="#" id="clear_style">Reset operation</a>
 	 	</li>
@@ -32,8 +32,8 @@
 	        <textarea id="node_desc" cols="30" rows="10" class="form-control input-sm" placeholder="Please enter a brief introduction to the node"></textarea>
 	      </div>
 	      <div class="form-group clearfix">
-	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-1" data-method="add" value="add" id="add_node_btn">
-	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-2" data-method="delete" value="delete" id="delete_node_btn">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-1" data-method="add" value="Add" id="add_node_btn">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-2" data-method="delete" value="Delete" id="delete_node_btn">
 	      </div>
 	    </ul>
 	  </li>
@@ -50,10 +50,10 @@
 	        <input type="text" class="form-control input-sm" id="edge_dist" placeholder="Please enter a distance">
 	      </div>
 	      <div class="form-group">
-	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-1" data-method="add" value="add" id="add_edge_btn">
+	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-1" data-method="add" value="Add" id="add_edge_btn">
 	      </div>
 	      <div class="form-group clearfix">
-	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-2" data-method="delete" value="delete" id="delete_edge_btn">
+	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-2" data-method="delete" value="Delete" id="delete_edge_btn">
 	      </div>
 	    </ul>
 	  </li>
@@ -76,17 +76,30 @@
 	        <input type="text" class="form-control input-sm" id="beginNode" placeholder="Please enter a starting point">
 	      </div>
 	      <div class="form-group">
-	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="dijkstra" id="dijkstrabtn">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Dijkstra" id="dijkstrabtn">
 	      </div>	 
  	    </ul>
 	  </li>
 	  <li><a href="#">Minimum Spanning Tree</a>
 	    <ul>
 	      <div class="form-group">
-	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="kruskal" id="kruskalbtn">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Kruskal" id="kruskalbtn">
 	      </div>	
 	      <div class="form-group">
-	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="prim" id="primbtn">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Prim" id="primbtn">
+	      </div>	  
+ 	    </ul>
+	  </li>	 
+	  <li><a href="#">Search</a>
+	    <ul>
+	    	<div class="form-group">
+	        <input type="text" class="form-control input-sm" id="keyword" placeholder="Please enter the keyword of desciption">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Search Keyword" id="searchbtn">
+	      </div>	
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Sort By Popularity" id="sortbtn">
 	      </div>	  
  	    </ul>
 	  </li>
@@ -96,7 +109,7 @@
 	<script src="bower_components/d3/d3.min.js"></script>
 	<script src="bower_components/bootbox.js/bootbox.js"></script>
 	<script src="js/Util.js"></script>
-	<script src="js/SVGGraph.js"></script>
+	<script src="js/Graph.js"></script>
 	<script src="js/init.js"></script>
 	<script src="js/main.js"></script>
 </body>

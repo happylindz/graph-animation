@@ -1,23 +1,10 @@
-function ALGraph(opacity){
-	this.opacity = opacity;
+function ALGraph(){
 	this.nodeArr = [];
 	this.map = [];
-	this.nodeCount = 0;
 	this.edgeCount = 0;
-	for(let i = 0; i < this.opacity; i++){
-		this.map[i] = []
-		for(let j = 0; j < this.opacity; j++){
-			if(i == j){
-				this.map[i][j] = 0;
-			}else{
-				this.map[i][j] = 32767;
-			}
-		}
-	}
 }
 
 ALGraph.prototype.insertNode = function(name, desc, popularity){
-	if(this.nodeCount < this.opacity){
 		this.nodeArr.push({
 				name: name,
 				desc: desc,
@@ -25,14 +12,10 @@ ALGraph.prototype.insertNode = function(name, desc, popularity){
 				pEdge: null,
 				isVisited: false
 		});
-		this.nodeCount++;
-	}else{
-		console.log("ALGraph cannot insert node");
-	}
 };
 
 ALGraph.prototype.insertEdge = function(begin, end, dist){
-	for(let i = 0; i < this.opacity; i++){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
 		if(this.nodeArr[i].name == begin){
 			if(this.nodeArr[i].pEdge == null){
 				this.nodeArr[i].pEdge = {
@@ -62,7 +45,7 @@ ALGraph.prototype.insertUndirectedEdge = function(begin, end, dist){
 };
 
 ALGraph.prototype.findNodeIndex = function(name){
-	for(let i = 0; i < this.opacity; i++){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
 		if(this.nodeArr[i].name == name){
 			return i;
 		}
@@ -71,13 +54,23 @@ ALGraph.prototype.findNodeIndex = function(name){
 };
 
 ALGraph.prototype.resetNodes = function(){
-	for(let i = 0; i < this.opacity; i++){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
 		this.nodeArr[i].isVisited = false;
 	}
 };
 
 ALGraph.prototype.createGraph = function(){
-	for(let i = 0; i < this.opacity; i++){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
+		this.map.push([]);
+		for(let j = 0; j < len; j++){
+			if(i == j){
+				this.map[i][j] = 0
+			}else{
+				this.map[i][j] = 32767;
+			}
+		}
+	}
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
 		let edge = this.nodeArr[i].pEdge;
 		while(edge != null){
 			let index = this.findNodeIndex(edge.nextNodeName);
@@ -85,10 +78,10 @@ ALGraph.prototype.createGraph = function(){
 			edge = edge.pNext;
 		}
 	}
-	console.log("成功创建分布图");
+	console.log("Create map successfully.");
 };
 ALGraph.prototype.outputGraph = function(){
-	for(let i = 0, len = this.opacity; i < len; i++){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
 		for(let j = 0; j < len; j++){
 			console.log(this.map[i][j] + "\t");
 		}
@@ -97,9 +90,8 @@ ALGraph.prototype.outputGraph = function(){
 };
 
 ALGraph.prototype.haveAllNodeVisited = function(){
-	let nodeArr = this.nodeArr;
-	for(let i = 0, len = this.opacity; i < len; i++){
-		if(!nodeArr[i].isVisited){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
+		if(!this.nodeArr[i].isVisited){
 			return false;
 		}
 	}
@@ -113,7 +105,7 @@ ALGraph.prototype.DFSTraverse = function(index, res){
 	}else{
 		return false;
 	}
-	for(let i = 0, len = this.opacity; i < len; i++){
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
 		if(this.map[index][i] != 0 && this.map[index][i] != 32767){
 			if(!this.nodeArr[i].isVisited){
 				this.DFSTraverse(i, res);
@@ -295,6 +287,36 @@ ALGraph.prototype.outputPrim = function(){
 	}
 	this.resetNodes();
 	return result;
+}
+
+ALGraph.prototype.sortByPopularity = function(){
+	let data = this.nodeArr.slice(0);
+	data.sort(function(node1, node2){
+		return node1.popularity < node2.popularity;
+	});
+	let res = [];
+	for(let i = 0, len = data.length; i < len; i++){
+		res.push({
+			name: data[i].name,
+			popularity: data[i].popularity
+		})
+	}
+	return res;
+}
+
+ALGraph.prototype.searchKeyword = function(keyword){
+	let data = [];
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
+		let desc = this.nodeArr[i].desc;
+		if(desc.indexOf(keyword) >= 0){
+			data.push({
+				name: this.nodeArr[i].name,
+				popularity: this.nodeArr[i].popularity,
+				desc: desc.replace(new RegExp((keyword),'g'), "<span style='color:#A254A2'>" + keyword + "</span>")
+			})
+		}
+	}
+	return data;
 }
 
 
