@@ -26,14 +26,10 @@ global.initData = function() {
 	edges.forEach(function(edge) {
 		g.insertUndirectedEdge(edge.source, edge.target, edge.dist);
 	});
-
-	g.createGraph();
 	return g;
-
 }
 
 global.g = initData();
-g.outputGraph();
 
 app.use("/", routes);
 app.listen(3000, function() {

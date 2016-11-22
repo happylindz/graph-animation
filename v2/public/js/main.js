@@ -40,15 +40,22 @@ $(document).ready(function() {
 		}).then(function(res){
 			showNav();	  
 			if(res.code == 0){
+
 				let data = res.data;
-				graph.displayTraversal(res.data);
+				if(res.method == "dfs"){
+					graph.displayDFSTraversal(res.data);
+				}else{
+					graph.displayBFSTraversal(res.data);
+				}
+
 				setTimeout(function(){
-					let message = data[0];
+					let message = data[0].name;
 					for(let i = 1, len = data.length; i < len; i++){
-						message += " --> " + data[i];
+						message += " --> " + data[i].name;
 					}
 					alertBootbox(message, "Node " + method.toUpperCase() + " Traversal:");
-				}, data.length * 1000);
+				}, data.length * 1200);
+
 			}else{
 				alertBootbox(res.message);
 			}				
@@ -91,6 +98,9 @@ $(document).ready(function() {
 						graph.deleteNode(name);
 					}
 				}
+				$("#node_name").val("");
+				$("#node_desc").val("");
+				$('#node_popularity').val("");
 			}
 			alertBootbox(res.message, "", callback);
 		})
@@ -120,7 +130,7 @@ $(document).ready(function() {
 			contentType: "application/json"
 		})
 		.done(function(res) {
-			howNav();	  
+			showNav();	  
 			let callback = null;
 			if(res.code == 0){
 				if(res.method == "add"){
@@ -132,6 +142,9 @@ $(document).ready(function() {
 						graph.deleteEdge(begin, end);
 					}
 				}
+				$('#edge_begin').val("");
+				$('#edge_end').val("");
+				$("#edge_dist").val("");
 			}
 			alertBootbox(res.message, "",callback);
 		})
@@ -266,6 +279,22 @@ $(document).ready(function() {
 		.fail(function(err) {
 			console.log("error" + err);
 		});
+	});
+	$(window).bind('beforeunload', function(){
+		$.ajax({
+			url: '/save',
+			type: 'post',
+		})
+		.done(function() {
+			console.log("success");
+		})
+		.fail(function() {
+			console.log("error");
+		})
+		.always(function() {
+			console.log("complete");
+		});
+		
 	});
 
 });

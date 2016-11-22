@@ -264,11 +264,13 @@ Graph.prototype.deleteEdge = function(begin, end){
 	this.updateEdge();
 }
 
-Graph.prototype.displayTraversal = function(res){
-	for(let i = 0; i < res.length; i++){
+Graph.prototype.displayDFSTraversal = function(data){
+
+	for(let i = 0, len = data.length; i < len; i++){
+
 		setTimeout(function(){
-			this.svg_nodes.transition().duration(500).ease("linear").style("fill",function(node){
-				if(node.name == res[i]){
+			this.svg_nodes.transition().duration(600).ease("linear").style("fill",function(node){
+				if(node.name == data[i].name){
 					node.isVisited = true;
 					return "#A254A2";
 				}else if(node.isVisited == true){
@@ -277,16 +279,57 @@ Graph.prototype.displayTraversal = function(res){
 					return "#F6E8E9";
 				}
 			})
-		}.bind(this), i * 1000);
+		}.bind(this), i * 1200);
+
 		setTimeout(function(){
-			this.svg_edges.transition().duration(500).ease("linear").style("stroke-width", function(line){
-				if((line.source.name == res[i] && line.target.name==res[i + 1]) || (line.source.name == res[i + 1] && line.target.name==res[i])){
+			this.svg_edges.transition().duration(600).ease("linear").style("stroke-width", function(line){
+				if((line.source.name == data[i].name && line.target.name == data[i + 1].name) || (line.source.name == data[i + 1].name && line.target.name == data[i].name)){
 					return 3;
 				}else{
 					return 0.5;
 				}
 			})
-		}.bind(this), i * 1000 + 500);
+		}.bind(this), i * 1200 + 600);
+
+	}
+
+}
+
+Graph.prototype.displayBFSTraversal = function(data){
+
+	for(let i = 0, index = 0, len = data.length; i < len; i++){
+		let name = data[i].name;
+		setTimeout(function(){
+			this.svg_nodes.transition().duration(600).ease("linear")
+					.style("fill", function(node){
+						if(node.name == name){
+							node.isVisited = true;
+							return "#A254A2";
+						}else if(node.isVisited == true){
+							return "#A95";
+						}else{
+							return "#F6E8E9";
+						}
+					})
+		}.bind(this), i * 1200);
+
+		if(data[i].selected == true){
+			index = i;
+		}
+
+		setTimeout(function(){
+			this.svg_edges.transition().duration(600).ease("linear").style("stroke-width", function(line){
+				if(i + 1 >= data.length || data[i + 1].selected == true){
+					return 0.5;
+				}
+				if((line.source.name == data[index].name && line.target.name == data[i + 1].name) || (line.source.name == data[i + 1].name && line.target.name == data[index].name)){
+					return 3;
+				}else{
+					return 0.5;
+				}
+			});
+		}.bind(this), i * 1200 + 600);	
+
 	}
 }
 
@@ -366,6 +409,7 @@ Graph.prototype.outputDijkstra = function(data){
 				}
 			});
 		}.bind(this), i * 1800 + 600);		
+		
 		setTimeout(function(){
 			this.svg_path_texts.transition().duration(600).ease("linear")
 					.text(function(node){
@@ -378,14 +422,14 @@ Graph.prototype.outputDijkstra = function(data){
 
 	}
 	setTimeout(function(){
-			this.svg_nodes.transition().duration(600).ease("linear")
-					.style("fill", function(node){
-						if(node.isVisited == true){
-							return "#A95";
-						}else{
-							return "#F6E8E9";
-						}
-					})
+		this.svg_nodes.transition().duration(600).ease("linear")
+				.style("fill", function(node){
+					if(node.isVisited == true){
+						return "#A95";
+					}else{
+						return "#F6E8E9";
+					}
+				})
 	}.bind(this), data.length * 1800);
 	let distObj = {};
 	data.forEach(function(item){

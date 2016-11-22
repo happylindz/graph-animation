@@ -19,6 +19,9 @@ circle{
 	-webkit-animation: fill 2s ease 0;
 	animation: fill 2s ease 0;
 }
+.modal-dialog{
+  min-width: 800px !important; 
+}
 
 #nav{
   position: fixed;

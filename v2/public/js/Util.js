@@ -42,7 +42,7 @@ function showNav(){
 }
 
 function alertBootbox(message, title, callback){
-	title = title || "结果";
+	title = title || "Result:";
 	callback = callback || null;
 	let box = bootbox.alert({
 		title: title,
@@ -57,9 +57,4 @@ function alertBootbox(message, title, callback){
 		backdrop: true,
 		animate: true,
 	});	
-	box.css({
-		'margin-top': function () {
-		  return 100;
-		}
-	});
 }

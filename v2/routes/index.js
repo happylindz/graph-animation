@@ -4,35 +4,21 @@ var fsp = require("fs-promise");
 var fs = require("fs");
 
 router.post("/nodes", function(req, res) {
-	fsp.readFile("./test/nodes_data.json", {encoding: "utf8"})
-		 .then(function (contents) {
-				res.send({
-					code: 0,
-					message: "Read node successful.",
-					data: JSON.parse(contents)
-				});
-		 }).catch(function(err){
-		 	res.send({
-				code: 1,
-				mesages: "The server has failed and can not get data."
-			});
-		});
+	let data = g.getNodes();
+	res.send({
+		code: 0,
+		message: "Read nodes successful.",
+		data: data
+	});
 });
 
 router.post("/edges", function(req, res) {
-	fsp.readFile("./test/edges_data.json", {encoding: "utf8"})
-			.then(function (contents) {
-				res.send({
-					code: 0,
-					message: "The read edge was successful.",
-					data: JSON.parse(contents)
-				});
-			}).catch(function (err) {
-				res.send({
-					code: 1,
-					mesages: "The server has failed and can not get data."
-				});
-			});
+	let data = g.getEdges();
+	res.send({
+		code: 0,
+		message: "Read edges successful.",
+		data: data
+	});
 });
 
 router.post("/traversal", function(req, res) {
@@ -59,7 +45,8 @@ router.post("/traversal", function(req, res) {
 	res.send({
 		code: code,
 		message: message,
-		data: result
+		data: result,
+		method: method
 	});
 });
 
@@ -71,73 +58,44 @@ router.post("/edge", function(req, res) {
 	let begin = req.body.data.begin;
 	let end = req.body.data.end;
 	let dist = req.body.data.dist;
+	
 	let code;
 	let message;
-	fsp.readFile("./test/edges_data.json", {encoding: "utf8"})
-			.then(function (content) {
-				let edges = JSON.parse(content).edges;
-				let index = -1;
-				for(let i = 0, len = edges.length; i < len; i++){
-					if ((edges[i].source == begin && edges[i].target == end) || (edges[i].source == end && edges[i].target == begin)) {
-						index = i;
-					}
-				}
-				if(method == "add"){
-					if(index == -1){
-						edges.push({
-							source: begin,
-							target: end,
-							dist: dist
-						})
-						code = 0;
-						message = "Added edge successfully.";
-					}else{
-						code = 2;
-						message = "The edge already exists, do not add it again.";
-					}
-				}else if(method == "delete"){
-					if(index == -1){
-						code = 3;
-						message = "The edge could not be found.";
-					}else {
-						edges.splice(index, 1);
-						code = 0;
-						message = "The edge was successfully deleted.";
-					}
-				}else{
-					code = 4;
-					message = "The input command is incorrect.";
-				}
-				return edges;
-			}).then(function(edges){
-				if(code == 0){
-					let content = {
-						edges: edges
-					};
-					fsp.writeFile("./test/edges_data.json", JSON.stringify(content)).then(function(){
-						g = initData();
-					}).then(function(){
-						res.send({
-							code: code,
-							message: message,
-							method: method
-						});
-					})
-				}else{
-					res.send({
-						code: code,
-						message: message,
-						method: method
-					});
-				}
-			})
-			.catch(function (err) {
-				res.send({
-					code: 1,
-					message: "The server has failed and can not get data",
-					method: method
-				});
-			});
+
+	let bIndex = g.findNodeIndex(begin);
+	let eIndex = g.findNodeIndex(end);
+
+	if(bIndex == -1 || eIndex == -1){
+		code = 1;
+		message = "Node cannot found."
+	}else{
+
+		if(method == "add"){
+			if(!g.findEdge(bIndex, eIndex)){
+				code = 0;
+				message = "Added edge successfully.";
+				g.insertUndirectedEdge(begin, end, dist);
+			}else{
+				code = 1;
+				message = "The edge already exists, do not add it again.";		
+			}
+		}else{
+			if(g.findEdge(bIndex, eIndex)){
+				code = 0;
+				message = "Deleted edge successfully.";
+				g.deleteUndirectedEdge(begin, end);
+			}else{
+				code = 1;
+				message = "The edge already exists, do not add it again.";
+			}
+		}
+	}
+	res.send({
+		code: code,
+		message: message,
+		method: method
+	});
+
 });
 
 router.post("/node", function(req, res) {
@@ -146,94 +104,36 @@ router.post("/node", function(req, res) {
 	let name = req.body.data.name;
 	let desc = req.body.data.desc;
 	let popularity = req.body.data.popularity;
+
 	let code;
 	let message;
-	let edges;
-	let removed_edges = [];
 
-	fsp.readFile("./test/nodes_data.json", {encoding: "utf8"}).
-	then(function(content){
-		let nodes = JSON.parse(content).nodes;
-		let index = -1;
-		for(let i = 0, len = nodes.length; i < len; i++){
-			if(nodes[i].name == name){
-				index = i;
-				break;
-			}
-		}
-		if(method == "add"){
-			if(index == -1){
-				nodes.push({
-					name: name,
-					desc: desc,
-					popularity: popularity
-				})
-				code = 0;
-				message = "Node was successfully added";
-			}else{
-				code = 2;
-				message = "The node already exists, do not add it again.";
-			}
-		}else if(method == "delete"){
-			if (index == -1) {
-				code = 3;
-				message = "The node was not found";
-			} else {
-				console.log(nodes[index]);
-				nodes.splice(index, 1);
-				code = 0;
-				message = "The node was successfully deleted";
-				let content = fs.readFileSync("./test/edges_data.json");
-				edges = JSON.parse(content).edges;
-				for(let i = 0, len = edges.length; i < len; i++){
-					if(edges[i].source == name || edges[i].target == name){
-						removed_edges.unshift(i);
-					}
-				}
-				for(let i = 0, len = removed_edges.length; i < len; i++){
-					edges.splice(removed_edges[i], 1);
-				}
-
-			}
+	let index = g.findNodeIndex(name);
+	if(method == "add"){
+		if(index == -1){
+			g.insertNode(name, desc, popularity);
+			code = 0;
+			message = "Node was successfully added";
 		}else{
-			code = 4;
-			message = "The input command is incorrect";
+			code = 2;
+			message = "The node already exists, do not add it again.";
 		}
-		return nodes;
-	}).then(function(nodes){
-		if(code == 0){
-			let content = {
-				nodes: nodes
-			};
-			if(method == "add"){
-				fsp.writeFile("./test/nodes_data.json", JSON.stringify(content)).then(function(){
-					g = initData();
-				});
-			}else if(method == "delete"){
-				fsp.writeFile("./test/nodes_data.json", JSON.stringify(content)).then(function(){
-					content = {
-						edges: edges
-					}
-					return content;
-				}).then(function(content){
-					return fsp.writeFile("./test/edges_data.json", JSON.stringify(content));
-				}).then(function(){
-					g = initData();
-				})
-			}		
+	}else{
+		if(index == -1){
+			code = 3;
+			message = "The node was not found";
+		}else{
+			g.deleteNode(name);
+			code = 0;
+			message = "Node was successfully deleted";
 		}
-		res.send({
-			code: code,
-			message: message,
-			method: method
-		});
-	}).catch(function (err) {
-		res.send({
-			code: 1,
-			message: "The server has failed and can not get data",
-			method: method
-		});
-	});	
+	}
+
+	res.send({
+		code: code,
+		message: message,
+		method: method
+	});
 });
 
 router.all("/matrix", function(req, res){
@@ -286,6 +186,23 @@ router.post("/search", function(req, res){
 	res.send({
 		code: 0,
 		data: data
+	});
+});
+
+router.post("/save", function(req, res){
+	let nodes = g.getNodes();
+	let edges = g.getEdges();
+	fsp.writeFile('./test/nodes_data.json', JSON.stringify({
+		nodes: nodes
+	}))
+	.then(fsp.writeFile('./test/edges_data.json', JSON.stringify({
+		edges: edges
+	})))
+	.then(function(){
+		res.send({
+			code: 0,
+			message: "Save data successfully"
+		})
 	});
 });
 

@@ -7,7 +7,7 @@
 				dataType: 'json'
 			})
 			.done(function(res) {
-				resolve(res.data.nodes);
+				resolve(res.data);
 			})
 			.fail(function(error) {
 				reject(error);
@@ -23,7 +23,7 @@
 				dataType: 'json'
 			})
 			.done(function(res) {
-				resolve(res.data.edges);
+				resolve(res.data);
 			})
 			.fail(function(error) {
 				reject(error);
@@ -32,7 +32,9 @@
 			});
 	});
 
-	Promise.all([nodes_fetch, edges_fetch]).then(function ([nodes, edges]){
+	Promise.all([nodes_fetch, edges_fetch]).then(function ([nodes, edges]){	
+		console.log(nodes);
+		console.log(edges);
 
 		let graph = new Graph(nodes, edges);
 		window.graph = graph;

@@ -1,10 +1,10 @@
 {
-  "name": "d3js",
+  "name": "graph-algorithm",
   "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "description": "Dynamic demonstration of graph theory based on d3js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "",
   "license": "ISC",
