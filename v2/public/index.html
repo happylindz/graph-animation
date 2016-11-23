@@ -3,8 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Graph Algorithm</title>
-	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
 </head>
 <body>	
 	<div id="nav">
@@ -30,8 +30,8 @@
 	        <textarea id="node_desc" cols="30" rows="10" class="form-control input-sm" placeholder="Please enter a brief introduction to the node"></textarea>
 	      </div>
 	      <div class="form-group clearfix">
-	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-1" data-method="add" value="Add" id="add_node_btn">
-	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-2" data-method="delete" value="Delete" id="delete_node_btn">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-1 dementor" data-method="add" value="Add" id="add_node_btn">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-2 dementor" data-method="delete" value="Delete" id="delete_node_btn">
 	      </div>
 	    </ul>
 	  </li>
@@ -63,8 +63,11 @@
 	      <div class="form-group">
 	        <input type="button" class="btn btn-primary traversal btn-sm btn-block"  value="DFS Traversal" id="dfsbtn" data-method="dfs">
 	      </div>
-	      <div class="form-group clearfix">
+	      <div class="form-group">
 	        <input type="button" class="btn btn-primary traversal btn-sm btn-block" value="BFS Traversal" id="bfsbtn" data-method="bfs">
+	      </div>
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary btn-sm btn-block" value="Maximum loop" id="loopbtn">
 	      </div>
 	    </ul>
 	  </li>
@@ -83,7 +86,7 @@
 	      <div class="form-group">
 	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Kruskal" id="kruskalbtn">
 	      </div>	
-	      <div class="form-group">
+	      <div class="form-group clearfix">
 	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Prim" id="primbtn">
 	      </div>	  
  	    </ul>
@@ -96,7 +99,7 @@
 	      <div class="form-group">
 	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Search Keyword" id="searchbtn">
 	      </div>	
-	      <div class="form-group">
+	      <div class="form-group clearfix">
 	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Sort By Popularity" id="sortbtn">
 	      </div>	  
  	    </ul>

@@ -1,5 +1,5 @@
 {
-  "name": "graph-algorithm",
+  "name": "graph-animation",
   "version": "1.0.0",
   "description": "Dynamic demonstration of graph theory based on d3js",
   "main": "app.js",

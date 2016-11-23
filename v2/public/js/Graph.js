@@ -587,6 +587,7 @@ Graph.prototype.outputSortResult = function(data){
 	message += "</tbody></table>";
 	return message;
 }
+
 Graph.prototype.searchKeyword = function(data){
 	if(data.length == 0){
 		return "The keyword could not be found";

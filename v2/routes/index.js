@@ -51,6 +51,18 @@ router.post("/traversal", function(req, res) {
 });
 
 
+router.post("/loop", function(req, res){
+	let name = req.body.name;
+	let data = g.getMaximumLoop(name);
+	res.send({
+		code: 0,
+		data: data,
+		message: "Get loop successfully."
+	});
+});
+
+
+
 
 router.post("/edge", function(req, res) {
 
@@ -181,6 +193,8 @@ router.get("/sort", function(req, res){
 	});
 });
 
+
+
 router.post("/search", function(req, res){
 	let data = g.searchKeyword(req.body.keyword);
 	res.send({
@@ -188,6 +202,7 @@ router.post("/search", function(req, res){
 		data: data
 	});
 });
+
 
 router.post("/save", function(req, res){
 	let nodes = g.getNodes();

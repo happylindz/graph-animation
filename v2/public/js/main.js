@@ -280,6 +280,33 @@ $(document).ready(function() {
 			console.log("error" + err);
 		});
 	});
+
+	$(document.body).on("click", "#loopbtn", function(){
+		let beginNode = $('#begin').val();
+		$.ajax({
+			url: '/loop',
+			type: 'post',
+			contentType: "application/json",
+			dataType: "json",
+			data: JSON.stringify({
+				name: beginNode
+			})
+		})
+		.done(function(res) {
+			let data = res.data;
+			if(res.code == 0){
+				graph.displayDFSTraversal(data);
+			}
+		})
+		.fail(function() {
+			console.log("error");
+		})
+		.always(function() {
+			console.log("complete");
+		});
+		
+	});
+
 	$(window).bind('beforeunload', function(){
 		$.ajax({
 			url: '/save',

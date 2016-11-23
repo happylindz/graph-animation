@@ -10,6 +10,13 @@ html, body{
 	height: 100%;
 	width: 100%;
 }
+body{
+  background: #F6F6F6;
+/*background-image: linear-gradient(to bottom, rgba(245,245,245,0.95) 0%, rgba(0,0,0,0.15) 100%),
+radial-gradient(at 50% -100%, rgba(245,245,245,0.90) 0%, rgba(0,0,0,0.40) 270%),
+radial-gradient(at 50% 2%, rgba(245,245,245,0.85) 0%, rgba(0,0,0,0.20) 100%);
+background-blend-mode: normal,multiply,multiply;
+*/}
 text {
   font: 12px Microsoft YaHei;
   pointer-events: none;
@@ -21,6 +28,15 @@ circle{
 }
 .modal-dialog{
   min-width: 800px !important; 
+}
+
+.btn-primary {
+  background: #36506C;
+  border-color: #36506C;
+}
+.btn-primary:hover {
+  background: #233142;
+  border-color: #233142;
 }
 
 #nav{
