@@ -8,7 +8,13 @@ In the graph, you can add/delete node and edge dynamically and you can see throu
 
 ## Screenshots
 
+v1:  
 
+![](https://github.com/happylindz/graph-animation/blob/master/screenshots/screenshots1.png?raw=true)
+
+v2: 
+
+![](https://github.com/happylindz/graph-animation/blob/master/screenshots/screenshots2.png?raw=true)
 
 ## Dependency 
 
