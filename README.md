@@ -1,16 +1,13 @@
+
 # Graph Animation
 
-This is our school curriculum tasks, in accordance with the contents of the curriculum design tasks to build a guide road map.
+This is our school curriculum tasks, in accordance with [the contents of the curriculum design tasks](https://github.com/happylindz/graph-animation/blob/master/Data-structure-course-design-task-book.pdf) to build a guide road map.
 
 The version II I wrote is an animated demonstration of the graph theory algorithm based on D3, written with jQuery, Node and Express. 
 
 In the graph, you can add/delete node and edge dynamically and you can see through the animation rendering algorithm such as DFS, BFS, MST, Dijkstra and so on.
 
 ## Screenshots
-
-v1:  
-
-![](https://github.com/happylindz/graph-animation/blob/master/screenshots/screenshots1.png?raw=true)
 
 v2: 
 
