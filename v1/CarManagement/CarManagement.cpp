@@ -42,10 +42,11 @@ void CarManagement::deleteOrder(){
 	cin>>minute;
 	bool findCar = false;
 	int expense;
+	bool findCarv2 = false;
 	while(park.size() != 0){
 		CarInfo c = park.top();
 		park.pop();
-		if(number == c.getArrTime()){
+		if(number == c.getNumber()){
 			carCount--;
 			expense = (hour + 1 - c.getArrTime() / 100) * 6;
 			findCar = true;
@@ -73,7 +74,7 @@ void CarManagement::deleteOrder(){
 			waitQueue.pop();
 			if(number == c.getNumber()){
 				waitCount--;
-				findCar = true;
+				findCarv2 = true;
 				break;
 			}
 			temp.push(c);
@@ -83,9 +84,9 @@ void CarManagement::deleteOrder(){
 			temp.pop();
 		}
 	}			
-	if(!findCar){
+	if(!findCar && !findCarv2){
 		cout<<"输入有误，找不到该车。"<<endl;
-	}else{
+	}else if(findCarv2){
 		cout<<"该车一直停在便道上，未能进入停车场，故不收费"<<endl;
 	}
 }

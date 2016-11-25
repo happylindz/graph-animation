@@ -1,4 +1,6 @@
 #include "../ALGraph/Node.cpp"
+using namespace std;
+#include <iostream>
 
 // 搜索关键字
 bool searchKeywords(string target, string key){

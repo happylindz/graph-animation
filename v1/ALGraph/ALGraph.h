@@ -28,7 +28,7 @@ public:
 	void shortestPath(string begin, string end);                            //通过邻接表实现 dijkstra 算法求最短距离
 	void outPutShortestPath(string begin, string end);                      //通过邻接矩阵实现 floyd 算法求最短路径
 
-	void miniDistanse(string begin, string end);                            //最小生成树业务逻辑
+	void miniDistanse();                          												  //最小生成树业务逻辑
 	void prim(string start);																								//Prim 算法具体实现
 	void outputPlanningMap(vector<EData> results);													//输出 Prim 算法规划路线图的结果
 

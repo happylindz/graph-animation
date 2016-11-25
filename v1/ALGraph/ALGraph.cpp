@@ -268,7 +268,11 @@ void ALGraph::outPutShortestPath(string begin, string end){
 	cout<<nodeArr[index2].name<<endl;
 }
 
-void ALGraph::miniDistanse(string begin, string end){
+void ALGraph::miniDistanse(){
+	string begin;
+	string end;
+	cout<<"请输入要查询距离的两个景点的名称: ";
+	cin>>begin>>end;
 	cout<<"Dijkstra算法:"<<endl;
 	shortestPath(begin, end);
 	cout<<"Floyd算法:"<<endl;
@@ -323,8 +327,8 @@ void ALGraph::outputPlanningMap(vector<EData> results){
 void ALGraph::sort(){
 	Node *res = new Node[opacity];
 	for(int i = 0; i < opacity; i++){
-		res[i].popularity = nodeArr[i].popularity;
 		res[i].setNode(nodeArr[i].name);
+		res[i].popularity = nodeArr[i].popularity;
 	}
 	quickSort(0, opacity - 1, res);
 	cout<<"根据不同景点的受欢迎程度对景点进行快速排序:"<<endl;
