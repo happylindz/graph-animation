@@ -455,6 +455,7 @@ Graph.prototype.outputDijkstra = function(data){
 Graph.prototype.resetStyle = function(){
 	this.nodes_data.forEach(function(data){
 		data.isVisited = false;
+		data.path = 32767;
 	});
 	this.edges_data.forEach(function(data){
 		data.isVisited = false;
@@ -467,6 +468,7 @@ Graph.prototype.resetStyle = function(){
 		this.svg.select("#svg_path_texts").remove();
 		this.svg_path_texts = null;
 	}
+
 }
 Graph.prototype.outputRoads = function(edges){
 	let message = "<table class='table table-striped'>";

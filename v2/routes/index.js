@@ -98,7 +98,7 @@ router.post("/edge", function(req, res) {
 				g.deleteUndirectedEdge(begin, end);
 			}else{
 				code = 1;
-				message = "The edge already exists, do not add it again.";
+				message = "The edge cannot found.";
 			}
 		}
 	}

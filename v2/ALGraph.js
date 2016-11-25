@@ -68,6 +68,20 @@ ALGraph.prototype.deleteNode = function(name){
 	}
 	this.map.splice(index, 1);
 	this.nodeArr.splice(index, 1);
+	for(let i = 0, len = this.nodeArr.length; i < len; i++){
+			if(this.nodeArr[i].pEdge.nextNodeName == name){
+				this.nodeArr[i].pEdge = this.nodeArr[i].pEdge.pNext;
+			}else{
+				let edge = this.nodeArr[i].pEdge;
+				while(edge.pNext != null){
+					if(edge.pNext.nextNodeName == name){
+						edge.pNext = edge.pNext.pNext;
+						break;
+					}
+					edge = edge.pNext;
+				}
+			}
+	}
 }
 
 ALGraph.prototype.insertEdge = function(begin, end, dist){
@@ -103,7 +117,6 @@ ALGraph.prototype.deleteEdge = function(begin, end){
 
 	let bIndex = this.findNodeIndex(begin);
 	let eIndex = this.findNodeIndex(end);
-
 	if(this.nodeArr[bIndex].pEdge.nextNodeName == end){
 		this.nodeArr[bIndex].pEdge = this.nodeArr[bIndex].pEdge.pNext;
 	}else{
@@ -126,7 +139,6 @@ ALGraph.prototype.deleteUndirectedEdge = function(begin, end){
 }
 
 ALGraph.prototype.DFSTraverse = function(index, res){
-	console.log(this.nodeArr[index]);
 	if(this.nodeArr[index].isVisited == false){
 		res.push({
 			name: this.nodeArr[index].name
@@ -146,42 +158,6 @@ ALGraph.prototype.DFSTraverse = function(index, res){
 		}
 	}
 };
-
-ALGraph.prototype.getMaximumLoop = function(name){
-	let data = [];
-	if(this.nodeArr.length == 0){
-		return data;
-	}
-	let index = this.findNodeIndex(name);
-	if(index != -1){
-		this.DFSTraverse(index, data);
-	}else{
-		return [];
-	}
-	this.resetNodes();
-	let max = -1;
-	let res;
-	for(let i = 1, len = data.length; i < len; i++){
-		let idx = i - 1;
-		while(idx > 0){
-			if(data[idx].name == data[i].name){
-				idx = idx + 1;
-				break;
-			}
-			idx --;
-		}
-		for(let j = idx; j < i; j++){
-			let bIndex = this.findNodeIndex(data[i].name);
-			let eIndex = this.findNodeIndex(data[j].name);
-			let beforeIndex = this.findNodeIndex(data[i - 1].name);
-			if(this.map[bIndex][eIndex] != 32767 && this.map[bIndex][eIndex] != 0 && beforeIndex != eIndex){
-				res = data.slice(j, i + 1);
-				return res;
-			}
-		}
-	}
-	return [];
-}
 
 ALGraph.prototype.createTourSortGraphByDFS = function(beginNode){
 	
@@ -322,7 +298,7 @@ ALGraph.prototype.outputKruskal = function(){
 
 ALGraph.prototype.outputPrim = function(){
 	let result = [];
-	let index = Math.floor(Math.random() * this.nodeArr.length);
+	let index = 0;
 	let edges = [];
 	while(!this.haveAllNodeVisited()){
 		this.nodeArr[index].isVisited = true;
@@ -335,10 +311,14 @@ ALGraph.prototype.outputPrim = function(){
 			});
 			edge = edge.pNext;
 		}
+
 		while(!this.haveAllNodeVisited()){
 			edges.sort(function(edge1, edge2){
 				return edge1.dist - edge2.dist;
 			});
+			if(edges.length == 0){
+				return result;
+			}
 			let e = edges[0];
 			edges.splice(0, 1);
 			if(!this.nodeArr[this.findNodeIndex(e.end)].isVisited){
@@ -347,6 +327,7 @@ ALGraph.prototype.outputPrim = function(){
 				break;
 			}
 		}
+
 	}
 	this.resetNodes();
 	return result;

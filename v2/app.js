@@ -30,6 +30,7 @@ global.initData = function() {
 }
 
 global.g = initData();
+g.outputPrim();
 
 app.use("/", routes);
 app.listen(3000, function() {
