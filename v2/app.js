@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
-Z
+
 global.initData = function() {
 
 	let nodes = JSON.parse(fs.readFileSync("./test/nodes_data.json")).nodes;
