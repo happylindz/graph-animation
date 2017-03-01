@@ -204,21 +204,21 @@ router.post("/search", function(req, res){
 });
 
 
-router.post("/save", function(req, res){
-	let nodes = g.getNodes();
-	let edges = g.getEdges();
-	fsp.writeFile('./test/nodes_data.json', JSON.stringify({
-		nodes: nodes
-	}))
-	.then(fsp.writeFile('./test/edges_data.json', JSON.stringify({
-		edges: edges
-	})))
-	.then(function(){
-		res.send({
-			code: 0,
-			message: "Save data successfully"
-		})
-	});
-});
+// router.post("/save", function(req, res){
+// 	let nodes = g.getNodes();
+// 	let edges = g.getEdges();
+// 	fsp.writeFile('./test/nodes_data.json', JSON.stringify({
+// 		nodes: nodes
+// 	}))
+// 	.then(fsp.writeFile('./test/edges_data.json', JSON.stringify({
+// 		edges: edges
+// 	})))
+// 	.then(function(){
+// 		res.send({
+// 			code: 0,
+// 			message: "Save data successfully"
+// 		})
+// 	});
+// });
 
 module.exports = router;
