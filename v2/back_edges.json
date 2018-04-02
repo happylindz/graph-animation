@@ -1,0 +1,18 @@
+{
+  "edges":[ 
+    { "source": "故宫" , "target": "棋盘山", "dist": 11 },
+    { "source": "故宫" , "target": "实胜寺", "dist": 9 },
+    { "source": "故宫" , "target": "世博园", "dist": 5}, 
+    { "source": "故宫" , "target": "北陵", "dist": 8},
+    { "source": "故宫" , "target": "方特", "dist": 14}, 
+    { "source": "张氏帅府" , "target": "世博园", "dist": 7},
+    { "source": "世博园" , "target": "怪坡", "dist": 6}, 
+    { "source": "北陵" , "target": "棋盘山", "dist": 7}, 
+    { "source": "方特" , "target": "怪坡", "dist": 12},
+    { "source": "清福陵" , "target": "博物馆", "dist": 10},
+    { "source": "清福陵" , "target": "世博园", "dist": 4},
+    { "source": "实胜寺" , "target": "方特", "dist": 6},
+    { "source": "张氏帅府" , "target": "棋盘山", "dist": 17},
+    { "source": "张氏帅府" , "target": "博物馆", "dist": 9}
+   ]
+}
