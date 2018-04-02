@@ -65,7 +65,7 @@ export default {
             this.alGraph = g;
         },
         initView(nodes, edges) {
-            const graph = new Graph(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)));
+            const graph = new Graph(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)), this.$message);
             graph.drawing();
             this.graph = graph;
         },

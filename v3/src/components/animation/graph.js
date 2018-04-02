@@ -8,11 +8,12 @@ const requestAnimationFrame = (function () {
 })();
 
 export default class {
-    constructor(nodes, edges) {
+    constructor(nodes, edges, message) {
         this.container = '#animation';
         this.width = $(this.container).width();
         this.height = $(this.container).height();
         this.init(nodes, edges);
+        this.message = message;
     }
     init(nodes, edges) {
         edges.forEach((edge) => {
@@ -73,7 +74,7 @@ export default class {
                 return;
             }
             if(node.desc !== '') {
-                // console.log('Node description', node.desc);
+                this.message(node.desc, '节点描述');
             }
         }).call(this.force.drag);
         this.svg_nodes_texts.enter().append('text');
