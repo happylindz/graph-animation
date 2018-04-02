@@ -1,0 +1,21 @@
+{
+  "name": "graph-animation",
+  "version": "1.0.0",
+  "description": "Dynamic demonstration of graph theory based on d3js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootbox": "^4.4.0",
+    "bootstrap": "^3.3.7",
+    "d3": "^3.5.17",
+    "express": "^4.14.0"
+  },
+  "devDependencies": {
+    "body-parser": "^1.15.2",
+    "fs-promise": "^1.0.0"
+  }
+}

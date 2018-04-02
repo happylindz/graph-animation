@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Graph Animation</title>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/main.css">
+</head>
+<body>	
+	<div id="nav">
+		Navigation
+	</div>
+	<ul class="topnav">
+	 	<li>
+	 		<a href="#" id="clear_style">Reset operation</a>
+	 	</li>
+	 	<li>
+	 		<a href="#" id="graph_matrix">Adjacent Matrix</a>
+	 	</li>
+	  <li>
+	    <a href="#">Node Operation</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="node_name" placeholder="Please enter a node name">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="node_popularity" placeholder="Please enter the node popularity">
+	      </div>
+	      <div class="form-group">
+	        <textarea id="node_desc" cols="30" rows="10" class="form-control input-sm" placeholder="Please enter a brief introduction to the node"></textarea>
+	      </div>
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-1 dementor" data-method="add" value="Add" id="add_node_btn">
+	        <input type="button" class="btn btn-primary btn-sm node_operation col-sm-4 col-sm-offset-2 dementor" data-method="delete" value="Delete" id="delete_node_btn">
+	      </div>
+	    </ul>
+	  </li>
+	  <li>
+	    <a href="#">Edge Operation</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="edge_begin" placeholder="Please enter a starting point">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="edge_end" placeholder="Please enter an end point">
+	      </div>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="edge_dist" placeholder="Please enter a distance">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-1" data-method="add" value="Add" id="add_edge_btn">
+	      </div>
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary edge_operation btn-sm col-sm-4 col-sm-offset-2" data-method="delete" value="Delete" id="delete_edge_btn">
+	      </div>
+	    </ul>
+	  </li>
+	  <li><a href="#">Traversal</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="begin" placeholder="Please enter a starting point">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary traversal btn-sm btn-block"  value="DFS Traversal" id="dfsbtn" data-method="dfs">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary traversal btn-sm btn-block" value="BFS Traversal" id="bfsbtn" data-method="bfs">
+	      </div>
+<!-- 	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary btn-sm btn-block" value="Maximum loop" id="loopbtn">
+	      </div>
+ -->	</ul>
+	  </li>
+	  <li><a href="#">Shortest Path</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="text" class="form-control input-sm" id="beginNode" placeholder="Please enter a starting point">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Dijkstra" id="dijkstrabtn">
+	      </div>	 
+ 	    </ul>
+	  </li>
+	  <li><a href="#">Minimum Spanning Tree</a>
+	    <ul>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Kruskal" id="kruskalbtn">
+	      </div>	
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Prim" id="primbtn">
+	      </div>	  
+ 	    </ul>
+	  </li>	 
+	  <li><a href="#">Search</a>
+	    <ul>
+	    	<div class="form-group">
+	        <input type="text" class="form-control input-sm" id="keyword" placeholder="Please enter the keyword of desciption">
+	      </div>
+	      <div class="form-group">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Search Keyword" id="searchbtn">
+	      </div>	
+	      <div class="form-group clearfix">
+	        <input type="button" class="btn btn-primary btn-sm btn-block"  value="Sort By Popularity" id="sortbtn">
+	      </div>	  
+ 	    </ul>
+	  </li>
+	</ul>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/d3/d3.min.js"></script>
+	<script src="bower_components/bootbox.js/bootbox.js"></script>
+	<script src="js/Util.js"></script>
+	<script src="js/Graph.js"></script>
+	<script src="js/init.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
