@@ -21,15 +21,14 @@ export default {
             nodes = data.default.nodes;
             edges = data.default.edges;
         }
-        this.nodes = nodes;
-        this.edges = edges;
         // 底层算法支撑
         this.initMap(nodes, edges);
 
         // 视图创建
         this.initView(nodes, edges);
         window.onbeforeunload = () => {
-            saveData(this.nodes, this.edges);
+            const { nodes, edges } = this.alGraph.getData();
+            saveData(nodes, edges);
         };
     },
     methods: {
@@ -65,7 +64,7 @@ export default {
             this.alGraph = g;
         },
         initView(nodes, edges) {
-            const graph = new Graph(JSON.parse(JSON.stringify(nodes)), JSON.parse(JSON.stringify(edges)), this.$message);
+            const graph = new Graph(nodes, edges, this.$message);
             graph.drawing();
             this.graph = graph;
         },
@@ -80,9 +79,6 @@ export default {
                 this.handleMenu();
                 this.alGraph.insertNode(name, desc, popularity);
                 this.graph.insertNode(name, desc, popularity);
-                this.nodes.push({
-                    name, desc, popularity, path: "Infinity",
-                })
             }else{
                 this.errorMessage(`${name}节点已经存在了，请勿重复添加`);
             }
@@ -93,9 +89,6 @@ export default {
             if(index === -1) {
                 this.errorMessage(`找不到${name}节点`);
             }else {
-                this.nodes = this.nodes.filter((node) => {
-                    return node.name !== name;
-                })
                 this.successMessage(`${name}节点删除成功`);
                 this.handleMenu();
                 this.alGraph.deleteNode(name);
@@ -118,9 +111,6 @@ export default {
                     this.handleMenu();
                     this.alGraph.insertUndirectedEdge(begin, end, dist);
                     this.graph.insertEdge(begin, end, dist);
-                    this.edges.push({
-                        source: begin, target: end, dist,
-                    })
                 }
             }
         },
@@ -138,9 +128,6 @@ export default {
                     this.handleMenu();
                     this.alGraph.deleteUndirectedEdge(begin, end);
                     this.graph.deleteEdge(begin, end);
-                    this.edges = this.edges.filter((edge) => {
-                        return !(edge.target === end && edge.source === begin)
-                    });
                 }else {
                     this.errorMessage(`无法找到${begin}-${end}的边`);
                 }
@@ -266,9 +253,6 @@ export default {
             });
             this.handleMenu();
         },
-        saveData() {
-            
-        }
     },  
 }
 </script>

@@ -6,6 +6,44 @@ export default class ALGraph {
         this.map = [];
         this.edgeCount = 0;
     }
+    getData() {
+        const data = {};
+        data['nodes'] = this.nodeArr.map((node) => {
+            return {
+                "name": node.name,
+                "popularity": node.popularity,
+                "desc": node.desc,
+                "path": "Infinity"
+            };
+        })
+        data['edges'] = [];
+        this.nodeArr.forEach((node) => {
+            const source = node.name;
+            if(node.pEdge !== null) {
+                let edge = node.pEdge;
+                let target = edge.nextNodeName;
+                if(!data['edges'].some((edge) => {
+                    return (edge.source === source && edge.target === target) || (edge.source === target && edge.target === source);
+                })) {
+                    data['edges'].push({
+                        source: source,
+                        target: target,
+                        dist: edge.distance,
+                    });
+                }
+                while (edge.pNext !== null) {
+                    edge = edge.pNext;
+                    target = edge.nextNodeName;
+                    if (!data['edges'].some((edge) => {
+                        return (edge.source === source && edge.target === target) || (edge.source === target && edge.target === source);
+                    })) {
+                        data['edges'].push({source: source, target: target, dist: edge.distance});
+                    }
+                }
+            }
+        })
+        return data;
+    }
     /**
      * 找到节点名对应数组中的下标
      * @param {string} name 节点名
@@ -97,7 +135,7 @@ export default class ALGraph {
         this.nodeArr.splice(index, 1);
         for(let i = 0, len = this.nodeArr.length; i < len; i++) {
             if (this.nodeArr[i].pEdge === null) {
-                break;
+                continue;
             }
             if (this.nodeArr[i].pEdge.nextNodeName === name) {
                 this.nodeArr[i].pEdge = this.nodeArr[i].pEdge.pNext;
@@ -122,6 +160,9 @@ export default class ALGraph {
     insertEdge(bName, eName, dist) {
         const bIndex = this.getNodeIndex(bName);
         const eIndex = this.getNodeIndex(eName);
+        if(bIndex === -1 || eIndex === -1) {
+            return;
+        }
         this.map[bIndex][eIndex] = dist;
         if (this.nodeArr[bIndex].pEdge === null) {
             this.nodeArr[bIndex].pEdge = {
@@ -185,7 +226,7 @@ export default class ALGraph {
     deleteUndirectedEdge(bName, eName) {
         this.deleteEdge(bName, eName);
         this.deleteEdge(eName, bName);
-        this.edgeCount++;
+        this.edgeCount--;
     }
 
     /**
